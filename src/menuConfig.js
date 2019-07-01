@@ -142,6 +142,17 @@ const asideMenuConfig = [
       },
     ],
   },
+  {
+    name: 'washingMachine',
+    path: '/washingMachine',
+    icon: 'switch',
+    children: [
+      {
+        name: 'list',
+        path: '/washingMachine/list',
+      },
+    ],
+  },
 ];
 
 export { headerMenuConfig, asideMenuConfig };
