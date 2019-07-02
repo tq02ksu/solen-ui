@@ -32,8 +32,8 @@ export default {
   'app.menu.exception.403': 'Not Permission',
   'app.menu.exception.500': 'Server Error',
 
-  'app.menu.washingMachine': 'WashingMachine',
-  'app.menu.washing.Machine.list': 'WashingMachine List',
+  'app.menu.trash': 'Trashes',
+  'app.menu.trash.list': 'Trashes List',
 
   // Top Header
   'app.header.feedback': 'Feedback',

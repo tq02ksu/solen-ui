@@ -23,7 +23,7 @@ const Empty = React.lazy(() => import('./pages/Exception/Empty'));
 const Forbidden = React.lazy(() => import('./pages/Exception/Forbidden'));
 const NotFound = React.lazy(() => import('./pages/Exception/NotFound'));
 const ServerError = React.lazy(() => import('./pages/Exception/ServerError'));
-const WashingMachine = React.lazy(() => import('./pages/WashingMachine'));
+const Trash = React.lazy(() => import('./pages/Trash'));
 
 const routerConfig = [
   {
@@ -99,8 +99,8 @@ const routerConfig = [
     component: UserRegister,
   },
   {
-    path: '/washingMachine/list',
-    component: WashingMachine,
+    path: '/trash/list',
+    component: Trash,
   },
 ];
 

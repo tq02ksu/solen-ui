@@ -32,8 +32,8 @@ export default {
   'app.menu.exception.403': '403',
   'app.menu.exception.500': '500',
 
-  'app.menu.washingMachine': '洗衣机',
-  'app.menu.washing.Machine.list': '列表',
+  'app.menu.trash': '垃圾筒',
+  'app.menu.trash.list': '垃圾筒列表',
 
   // Top Header
   'app.header.feedback': '反馈',
