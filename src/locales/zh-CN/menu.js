@@ -34,6 +34,7 @@ export default {
 
   'app.menu.trash': '垃圾筒',
   'app.menu.trash.list': '垃圾筒列表',
+  'app.menu.trash.listDemo': '垃圾筒列表演示',
 
   // Top Header
   'app.header.feedback': '反馈',

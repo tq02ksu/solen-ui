@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Table, Pagination, Button, Dialog } from '@alifd/next';
 import { FormattedMessage } from 'react-intl';
-import axios from 'axios';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
+import DATA from './data.js';
 
 export default class TrashTable extends Component {
   state = {
@@ -18,6 +18,14 @@ export default class TrashTable extends Component {
     this.fetchData();
   }
 
+  mockApi = () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(DATA);
+      }, 300);
+    });
+  };
+
   fetchData = () => {
     const { current, pageSize } = this.state;
     this.setState(
@@ -25,14 +33,10 @@ export default class TrashTable extends Component {
         isLoading: true,
       },
       () => {
-        axios({
-          method: 'get',
-          url: '/api/listAll',
-        }).then(response => {
-          const dat = response.data;
+        this.mockApi().then((data) => {
           this.setState({
-            total: dat.length,
-            data: dat.slice((current - 1) * pageSize, current * pageSize),
+            total: data.length,
+            data: data.slice((current - 1) * pageSize, current * pageSize),
             isLoading: false,
           });
         });
@@ -58,20 +62,6 @@ export default class TrashTable extends Component {
     });
   };
 
-  handleStartup = () => {
-    Dialog.confirm({
-      title: '提示',
-      content: '暂不支持查看详情',
-    });
-  };
-
-  handleShutdown = () => {
-    Dialog.confirm({
-      title: '提示',
-      content: '暂不支持查看详情',
-    });
-  };
-
   renderBit = (value) => {
     return (
       [<span>低电平</span>, <span>高电平</span>][value]
@@ -87,21 +77,6 @@ export default class TrashTable extends Component {
           onClick={this.handleDetail}
         >
           <FormattedMessage id="app.btn.detail" />
-        </Button>
-        <Button
-          type="secondary"
-          style={{ marginRight: '5px' }}
-          onClick={this.handleStartup}
-        >
-          <FormattedMessage id="app.btn.startup" />
-        </Button>
-        <Button
-          type="normal"
-          warning
-          style={{ marginRight: '5px' }}
-          onClick={this.handleShutdown}
-        >
-          <FormattedMessage id="app.btn.shutdown" />
         </Button>
       </div>
     );

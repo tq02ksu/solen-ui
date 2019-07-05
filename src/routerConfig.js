@@ -24,6 +24,7 @@ const Forbidden = React.lazy(() => import('./pages/Exception/Forbidden'));
 const NotFound = React.lazy(() => import('./pages/Exception/NotFound'));
 const ServerError = React.lazy(() => import('./pages/Exception/ServerError'));
 const Trash = React.lazy(() => import('./pages/Trash'));
+const TrashDemo = React.lazy(() => import('./pages/TrashDemo'));
 
 const routerConfig = [
   {
@@ -101,6 +102,10 @@ const routerConfig = [
   {
     path: '/trash/list',
     component: Trash,
+  },
+  {
+    path: '/trash/listDemo',
+    component: TrashDemo,
   },
 ];
 

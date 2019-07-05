@@ -34,6 +34,7 @@ export default {
 
   'app.menu.trash': 'Trashes',
   'app.menu.trash.list': 'Trashes List',
+  'app.menu.trash.listDemo': 'Trashes DemoList',
 
   // Top Header
   'app.header.feedback': 'Feedback',

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Grid, Progress } from '@alifd/next';
 import { injectIntl } from 'react-intl';
-import axios from 'axios';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
+import DATA from './data.js';
 
 const { Row, Col } = Grid;
 
@@ -18,13 +18,8 @@ export default class TrashOverview extends Component {
   }
 
   fetchData = () => {
-    const params = { field: 'inputStat' };
-    axios({
-      method: 'get',
-      url: '/api/statByField',
-      params,
-    }).then(response => {
-      this.setState({ data: response.data });
+    this.setState({
+      data: DATA,
     });
   };
 

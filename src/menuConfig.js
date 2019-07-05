@@ -151,6 +151,10 @@ const asideMenuConfig = [
         name: 'list',
         path: '/trash/list',
       },
+      {
+        name: 'listDemo',
+        path: '/trash/listDemo',
+      },
     ],
   },
 ];
