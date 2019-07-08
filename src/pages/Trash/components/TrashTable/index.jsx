@@ -52,51 +52,57 @@ export default class TrashTable extends Component {
   };
 
   handleDetail = (deviceId) => {
-    axios.get(`/api/detail/${deviceId}`).then(response => {
-      Dialog.show({
-        title: `设备详细信息 ${deviceId}`,
-        content: response.data.reports.map(report => {
-          return <p content={report} />;
-        }),
+    return () => {
+      axios.get(`/api/detail/${deviceId}`).then(response => {
+        Dialog.show({
+          title: `设备详细信息 ${deviceId}`,
+          content: response.data.reports.map(report => {
+            return <p content={report} />;
+          }),
+        });
       });
-    });
+    };
   };
 
   handleStartup = (deviceId) => {
-    Dialog.confirm({
-      title: '启动设备',
-      content: `确认启动设备 ${deviceId}`,
-      onOk: () => {
-        return new Promise((resolve) => {
-          axios.post('/api/sendAscii', {
-            deviceId,
-            data: 'startup',
-          }).then(() => {
-            resolve();
-            Message.success('Startup successfully!');
+    return () => {
+      Dialog.confirm({
+        title: '启动设备',
+        content: `确认启动设备 ${deviceId}`,
+        onOk: () => {
+          return new Promise((resolve) => {
+            axios.post('/api/sendAscii', {
+              deviceId,
+              data: 'startup',
+            }).then(() => {
+              resolve();
+              Message.success('Startup successfully!');
+            });
           });
-        });
-      },
-    });
+        },
+      });
+    }
   };
 
   handleShutdown = (deviceId) => {
-    Dialog.confirm({
-      title: '启动设备',
-      content: `确认关闭设备 ${deviceId}`,
-      onOk: () => {
-        return new Promise((resolve) => {
-          axios.post('/api/sendAscii', {
-            deviceId,
-            data: 'shutdown',
-          })
-            .then(() => {
-              resolve();
-              Message.success('Shutdown successfully!');
-            });
-        });
-      },
-    });
+    return () => {
+      Dialog.confirm({
+        title: '启动设备',
+        content: `确认关闭设备 ${deviceId}`,
+        onOk: () => {
+          return new Promise((resolve) => {
+            axios.post('/api/sendAscii', {
+              deviceId,
+              data: 'shutdown',
+            })
+              .then(() => {
+                resolve();
+                Message.success('Shutdown successfully!');
+              });
+          });
+        },
+      });
+    };
   };
 
   renderBit = (value) => {
@@ -121,23 +127,21 @@ export default class TrashTable extends Component {
         >
           <FormattedMessage id="app.btn.detail" />
         </Button>
-        <Button.Group>
-          <Button
-            type="secondary"
-            style={{ marginRight: '5px' }}
-            onClick={this.handleStartup(deviceId)}
-          >
-            <FormattedMessage id="app.btn.startup" />
-          </Button>
-          <Button
-            type="normal"
-            warning
-            style={{ marginRight: '5px' }}
-            onClick={this.handleShutdown(deviceId)}
-          >
-            <FormattedMessage id="app.btn.shutdown" />
-          </Button>
-        </Button.Group>
+        <Button
+          type="secondary"
+          style={{ marginRight: '5px' }}
+          onClick={this.handleStartup(deviceId)}
+        >
+          <FormattedMessage id="app.btn.startup" />
+        </Button>
+        <Button
+          type="normal"
+          warning
+          style={{ marginRight: '5px' }}
+          onClick={this.handleShutdown(deviceId)}
+        >
+          <FormattedMessage id="app.btn.shutdown" />
+        </Button>
       </div>
     );
   };
