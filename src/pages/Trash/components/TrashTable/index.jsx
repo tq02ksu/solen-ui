@@ -71,9 +71,9 @@ export default class TrashTable extends Component {
         content: `确认启动设备 ${deviceId}`,
         onOk: () => {
           return new Promise((resolve) => {
-            axios.post('/api/sendAscii', {
+            axios.post('/api/sendControl', {
               deviceId,
-              data: 'startup',
+              ctrl: 1,
             }).then(() => {
               resolve();
               Message.success('Startup successfully!');
@@ -81,19 +81,19 @@ export default class TrashTable extends Component {
           });
         },
       });
-    }
+    };
   };
 
   handleShutdown = (deviceId) => {
     return () => {
       Dialog.confirm({
-        title: '启动设备',
+        title: '关闭设备',
         content: `确认关闭设备 ${deviceId}`,
         onOk: () => {
           return new Promise((resolve) => {
-            axios.post('/api/sendAscii', {
+            axios.post('/api/sendControl', {
               deviceId,
-              data: 'shutdown',
+              ctrl: 0,
             })
               .then(() => {
                 resolve();
