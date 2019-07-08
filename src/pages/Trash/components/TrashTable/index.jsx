@@ -59,6 +59,7 @@ export default class TrashTable extends Component {
           content: response.data.reports.map(report => {
             return <p content={report} />;
           }),
+          footerActions: ['ok'],
         });
       });
     };
