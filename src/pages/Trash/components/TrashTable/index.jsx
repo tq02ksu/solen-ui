@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Pagination, Button, Dialog } from '@alifd/next';
+import { Table, Pagination, Button, Dialog, Message } from '@alifd/next';
 import { FormattedMessage } from 'react-intl';
 import axios from 'axios';
 import IceContainer from '@icedesign/container';
@@ -51,24 +51,51 @@ export default class TrashTable extends Component {
     );
   };
 
-  handleDetail = () => {
-    Dialog.confirm({
-      title: '提示',
-      content: '暂不支持查看详情',
+  handleDetail = (deviceId) => {
+    axios.get(`/api/detail/${deviceId}`).then(response => {
+      Dialog.show({
+        title: `设备详细信息 ${deviceId}`,
+        content: response.data.reports.map(report => {
+          return <p content={report} />;
+        }),
+      });
     });
   };
 
-  handleStartup = () => {
+  handleStartup = (deviceId) => {
     Dialog.confirm({
-      title: '提示',
-      content: '暂不支持查看详情',
+      title: '启动设备',
+      content: `确认启动设备 ${deviceId}`,
+      onOk: () => {
+        return new Promise((resolve) => {
+          axios.post('/api/sendAscii', {
+            deviceId,
+            data: 'startup',
+          }).then(() => {
+            resolve();
+            Message.success('Startup successfully!');
+          });
+        });
+      },
     });
   };
 
-  handleShutdown = () => {
+  handleShutdown = (deviceId) => {
     Dialog.confirm({
-      title: '提示',
-      content: '暂不支持查看详情',
+      title: '启动设备',
+      content: `确认关闭设备 ${deviceId}`,
+      onOk: () => {
+        return new Promise((resolve) => {
+          axios.post('/api/sendAscii', {
+            deviceId,
+            data: 'shutdown',
+          })
+            .then(() => {
+              resolve();
+              Message.success('Shutdown successfully!');
+            });
+        });
+      },
     });
   };
 
@@ -78,31 +105,39 @@ export default class TrashTable extends Component {
     );
   };
 
-  renderOper = () => {
+  renderStatus = (value) => {
+    return (
+      value.active ? <span>正常</span> : <span>已断开</span>
+    );
+  };
+
+  renderOper = (deviceId) => {
     return (
       <div>
         <Button
           type="primary"
           style={{ marginRight: '5px' }}
-          onClick={this.handleDetail}
+          onClick={this.handleDetail(deviceId)}
         >
           <FormattedMessage id="app.btn.detail" />
         </Button>
-        <Button
-          type="secondary"
-          style={{ marginRight: '5px' }}
-          onClick={this.handleStartup}
-        >
-          <FormattedMessage id="app.btn.startup" />
-        </Button>
-        <Button
-          type="normal"
-          warning
-          style={{ marginRight: '5px' }}
-          onClick={this.handleShutdown}
-        >
-          <FormattedMessage id="app.btn.shutdown" />
-        </Button>
+        <Button.Group>
+          <Button
+            type="secondary"
+            style={{ marginRight: '5px' }}
+            onClick={this.handleStartup(deviceId)}
+          >
+            <FormattedMessage id="app.btn.startup" />
+          </Button>
+          <Button
+            type="normal"
+            warning
+            style={{ marginRight: '5px' }}
+            onClick={this.handleShutdown(deviceId)}
+          >
+            <FormattedMessage id="app.btn.shutdown" />
+          </Button>
+        </Button.Group>
       </div>
     );
   };
@@ -115,6 +150,7 @@ export default class TrashTable extends Component {
         <IceContainer>
           <Table loading={isLoading} dataSource={data} hasBorder={false}>
             <Table.Column title="设备ID" dataIndex="deviceId" />
+            <Table.Column title="状态" dataIndex="channel" cell={this.renderStatus} />
             <Table.Column title="lac" dataIndex="lac" />
             <Table.Column title="ci" dataIndex="ci" />
             <Table.Column title="输入端状态" dataIndex="inputStat" cell={this.renderBit} />
@@ -122,7 +158,7 @@ export default class TrashTable extends Component {
             <Table.Column
               title="操作"
               width={200}
-              dataIndex="oper"
+              dataIndex="deviceId"
               cell={this.renderOper}
             />
           </Table>
