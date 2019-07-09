@@ -162,7 +162,7 @@ export default class TrashTable extends Component {
             <Table.Column title="输出端状态" dataIndex="outputStat" cell={this.renderBit} />
             <Table.Column
               title="操作"
-              width={200}
+              width={400}
               dataIndex="deviceId"
               cell={this.renderOper}
             />
