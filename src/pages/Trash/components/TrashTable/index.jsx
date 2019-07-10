@@ -54,11 +54,18 @@ export default class TrashTable extends Component {
   handleDetail = (deviceId) => {
     return () => {
       axios.get(`/api/detail/${deviceId}`).then(response => {
+        const items = response.data.reports.map(report => {
+          return <li>{report.time}: {report.content}</li>;
+        });
         Dialog.show({
           title: `设备详细信息 ${deviceId}`,
-          content: response.data.reports.map(report => {
-            return <p content={report} />;
-          }),
+          content:
+            (
+              <div>
+                <p>收到的消息：</p>
+                <ul>{items}</ul>
+              </div>
+            ),
           footerActions: ['ok'],
         });
       });
