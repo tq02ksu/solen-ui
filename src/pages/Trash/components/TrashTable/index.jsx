@@ -120,23 +120,21 @@ export default class TrashTable extends Component {
     };
   };
 
+  inputOnChange = (val) => {
+    this.setState({ message: val });
+  };
+
   handleSendingAscii = (deviceId) => {
     return () => {
-      const inputOnChange = (val) => {
-        this.setState({
-          data: val,
-        });
-      };
-
       Dialog.confirm({
         title: '',
-        content: <Input placeholder="请输出消息: " onChange={inputOnChange} />,
+        content: <Input placeholder="请输出消息: " onChange={this.inputOnChange} />,
         onOk: () => {
           return new Promise((resolve) => {
-            const { val } = this.state;
+            const { message } = this.state;
             axios.post('/api/sendAscii', {
               deviceId,
-              data: val,
+              data: message,
             }).then((response) => {
               resolve();
               if (response.status === 200) {
@@ -190,7 +188,7 @@ export default class TrashTable extends Component {
         </Button.Group>
         <Button
           type="normal"
-          style={{ marginRight: '5px' }}
+          style={{ marginLeft: '5px' }}
           onClick={this.handleSendingAscii(deviceId)}
         >
           <FormattedMessage id="app.btn.message" />
