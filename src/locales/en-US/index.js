@@ -14,6 +14,7 @@ export default {
   'app.btn.detail': 'Detail',
   'app.btn.startup': 'Startup',
   'app.btn.shutdown': 'Shutdown',
+  'app.btn.message': 'Message',
   'app.btn.add': 'Add',
   ...menu,
   ...table,

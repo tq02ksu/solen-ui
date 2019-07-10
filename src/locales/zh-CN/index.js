@@ -14,6 +14,7 @@ export default {
   'app.btn.detail': '详情',
   'app.btn.startup': '开机',
   'app.btn.shutdown': '关机',
+  'app.btn.message': '消息',
   'app.btn.add': '新增',
   ...menu,
   ...table,

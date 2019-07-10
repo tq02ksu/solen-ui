@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Pagination, Button, Dialog, Message } from '@alifd/next';
+import { Table, Pagination, Button, Dialog, Message, Input } from '@alifd/next';
 import { FormattedMessage } from 'react-intl';
 import axios from 'axios';
 import IceContainer from '@icedesign/container';
@@ -75,9 +75,13 @@ export default class TrashTable extends Component {
             axios.post('/api/sendControl', {
               deviceId,
               ctrl: 1,
-            }).then(() => {
+            }).then((response) => {
               resolve();
-              Message.success('Startup successfully!');
+              if (response.status === 200) {
+                Message.success('Startup successfully !');
+              } else {
+                Message.error(`error, status is ${response.statusText}`);
+              }
             });
           });
         },
@@ -95,11 +99,45 @@ export default class TrashTable extends Component {
             axios.post('/api/sendControl', {
               deviceId,
               ctrl: 0,
-            })
-              .then(() => {
-                resolve();
-                Message.success('Shutdown successfully!');
-              });
+            }).then((response) => {
+              resolve();
+              if (response.status === 200) {
+                Message.success('Shutdown successfully !');
+              } else {
+                Message.error(`error, status is ${response.statusText}`);
+              }
+            });
+          });
+        },
+      });
+    };
+  };
+
+  handleSendingAscii = (deviceId) => {
+    return () => {
+      const inputOnChange = (val) => {
+        this.setState({
+          data: val,
+        });
+      };
+
+      Dialog.confirm({
+        title: '',
+        content: <Input placeholder="请输出消息: " onChange={inputOnChange} />,
+        onOk: () => {
+          return new Promise((resolve) => {
+            const { val } = this.state;
+            axios.post('/api/sendAscii', {
+              deviceId,
+              data: val,
+            }).then((response) => {
+              resolve();
+              if (response.status === 200) {
+                Message.success('Message sent!');
+              } else {
+                Message.error(`error, status is ${response.statusText}`);
+              }
+            });
           });
         },
       });
@@ -128,20 +166,27 @@ export default class TrashTable extends Component {
         >
           <FormattedMessage id="app.btn.detail" />
         </Button>
-        <Button
-          type="secondary"
-          style={{ marginRight: '5px' }}
-          onClick={this.handleStartup(deviceId)}
-        >
-          <FormattedMessage id="app.btn.startup" />
-        </Button>
+        <Button.Group>
+          <Button
+            type="secondary"
+            onClick={this.handleStartup(deviceId)}
+          >
+            <FormattedMessage id="app.btn.startup" />
+          </Button>
+          <Button
+            type="normal"
+            warning
+            onClick={this.handleShutdown(deviceId)}
+          >
+            <FormattedMessage id="app.btn.shutdown" />
+          </Button>
+        </Button.Group>
         <Button
           type="normal"
-          warning
           style={{ marginRight: '5px' }}
-          onClick={this.handleShutdown(deviceId)}
+          onClick={this.handleSendingAscii(deviceId)}
         >
-          <FormattedMessage id="app.btn.shutdown" />
+          <FormattedMessage id="app.btn.message" />
         </Button>
       </div>
     );
