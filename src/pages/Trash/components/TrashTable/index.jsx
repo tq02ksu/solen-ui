@@ -82,13 +82,11 @@ export default class TrashTable extends Component {
             axios.post('/api/sendControl', {
               deviceId,
               ctrl: 1,
-            }).then((response) => {
+            }).then(() => {
               resolve();
-              if (response.status === 200) {
-                Message.success('Startup successfully !');
-              } else {
-                Message.error(`error, status is ${response.statusText}`);
-              }
+              Message.success('Startup successfully !');
+            }).catch((error) => {
+              Message.error(`error, status is ${error.response.statusText}`);
             });
           });
         },
