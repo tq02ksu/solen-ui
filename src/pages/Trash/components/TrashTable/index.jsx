@@ -58,11 +58,11 @@ export default class TrashTable extends Component {
           return <li>{report.time}: {report.content}</li>;
         });
         Dialog.show({
-          title: `设备详细信息 ${deviceId}`,
+          title: '设备详细信息',
           content:
             (
               <div>
-                <p>收到的消息：</p>
+                <p>{deviceId} 收到的消息：</p>
                 <ul>{items}</ul>
               </div>
             ),
@@ -125,7 +125,7 @@ export default class TrashTable extends Component {
   handleSendingAscii = (deviceId) => {
     return () => {
       Dialog.confirm({
-        title: '',
+        title: '发送文本命令',
         content: <Input placeholder="请输出消息: " onChange={this.inputOnChange} />,
         onOk: () => {
           return new Promise((resolve) => {
