@@ -86,6 +86,7 @@ export default class TrashTable extends Component {
               resolve();
               Message.success('Startup successfully !');
             }).catch((error) => {
+              resolve();
               Message.error(`error, status is ${error.response.statusText}`);
             });
           });
@@ -108,6 +109,7 @@ export default class TrashTable extends Component {
               resolve();
               Message.success('Shutdown successfully !');
             }).catch((error) => {
+              resolve();
               Message.error(`error, status is ${error.response.statusText}`);
             });
           });
@@ -135,6 +137,7 @@ export default class TrashTable extends Component {
               resolve();
               Message.success('Message sent!');
             }).catch((error) => {
+              resolve();
               Message.error(`error, status is ${error.response.statusText}`);
             });
           });
