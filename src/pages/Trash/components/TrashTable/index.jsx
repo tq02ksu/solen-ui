@@ -104,13 +104,11 @@ export default class TrashTable extends Component {
             axios.post('/api/sendControl', {
               deviceId,
               ctrl: 0,
-            }).then((response) => {
+            }).then(() => {
               resolve();
-              if (response.status === 200) {
-                Message.success('Shutdown successfully !');
-              } else {
-                Message.error(`error, status is ${response.statusText}`);
-              }
+              Message.success('Shutdown successfully !');
+            }).catch((error) => {
+              Message.error(`error, status is ${error.response.statusText}`);
             });
           });
         },
@@ -133,13 +131,11 @@ export default class TrashTable extends Component {
             axios.post('/api/sendAscii', {
               deviceId,
               data: message,
-            }).then((response) => {
+            }).then(() => {
               resolve();
-              if (response.status === 200) {
-                Message.success('Message sent!');
-              } else {
-                Message.error(`error, status is ${response.statusText}`);
-              }
+              Message.success('Message sent!');
+            }).catch((error) => {
+              Message.error(`error, status is ${error.response.statusText}`);
             });
           });
         },
