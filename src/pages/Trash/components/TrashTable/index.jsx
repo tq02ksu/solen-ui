@@ -53,7 +53,7 @@ export default class TrashTable extends Component {
 
   handleDetail = (deviceId) => {
     return () => {
-      axios.get(`/api/detail/${deviceId}`).then(response => {
+      axios.get(`/api/device/${deviceId}`).then(response => {
         const items = response.data.reports.map(report => {
           return <li>{report.time}: {report.content}</li>;
         });
@@ -138,13 +138,34 @@ export default class TrashTable extends Component {
               Message.success('Message sent!');
             }).catch((error) => {
               resolve();
-              Message.error(`error, status is ${error.response.statusText}`);
+              Message.error(`Sending error, caused by ${error.response.statusText}`);
             });
           });
         },
       });
     };
   };
+
+  handleDelete = (deviceId) => {
+    return () => {
+      Dialog.confirm({
+        title: '确认删除?',
+        content: '确认删除?',
+        onOk: () => {
+          return new Promise((resolve) => {
+            axios.delete(`/api/device/${deviceId}`).then(() => {
+              resolve();
+              Message.success('Device deleted!');
+              this.fetchData();
+            }).catch((error) => {
+              resolve();
+              Message.error(`Deletion error, caused by ${error.response.statusText}`);
+            });
+          });
+        },
+      });
+    };
+  }
 
   renderBit = (value) => {
     return (
@@ -189,6 +210,13 @@ export default class TrashTable extends Component {
           onClick={this.handleSendingAscii(deviceId)}
         >
           <FormattedMessage id="app.btn.message" />
+        </Button>
+        <Button
+          type="normal"
+          style={{ marginLeft: '5px' }}
+          onClick={this.handleDelete(deviceId)}
+        >
+          <FormattedMessage id="app.btn.delete" />
         </Button>
       </div>
     );
