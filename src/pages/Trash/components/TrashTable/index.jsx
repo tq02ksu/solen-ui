@@ -85,6 +85,7 @@ export default class TrashTable extends Component {
             }).then(() => {
               resolve();
               Message.success('Startup successfully !');
+              this.fetchData();
             }).catch((error) => {
               resolve();
               Message.error(`error, status is ${error.response.statusText}`);
@@ -108,6 +109,7 @@ export default class TrashTable extends Component {
             }).then(() => {
               resolve();
               Message.success('Shutdown successfully !');
+              this.fetchData();
             }).catch((error) => {
               resolve();
               Message.error(`error, status is ${error.response.statusText}`);
