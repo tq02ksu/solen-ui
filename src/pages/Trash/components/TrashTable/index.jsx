@@ -165,7 +165,7 @@ export default class TrashTable extends Component {
         },
       });
     };
-  }
+  };
 
   renderBit = (value) => {
     return (

@@ -9,6 +9,10 @@ const { Row, Col } = Grid;
 
 @injectIntl
 export default class TrashOverview extends Component {
+  state = {
+    data: {},
+  };
+
   componentDidMount() {
     this.fetchData();
   }
