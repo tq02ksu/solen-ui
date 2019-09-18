@@ -36,7 +36,7 @@ export default class TrashOverview extends Component {
     });
     Object.keys(data).map(key => formatted.push({
       percent: data[key] / total * 100,
-      title: ['低电平', '高电平'][key],
+      title: ['小(d < 50μ)', '中(50μ < d < 100μ)', '大(d > 100μ)'][key],
       value: data[key],
     }));
 

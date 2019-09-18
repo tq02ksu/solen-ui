@@ -32,9 +32,13 @@ export default {
   'app.menu.exception.403': '403',
   'app.menu.exception.500': '500',
 
-  'app.menu.trash': '垃圾筒',
+  'app.menu.trash': '粉末制备',
   'app.menu.trash.list': '垃圾筒列表',
-  'app.menu.trash.listDemo': '垃圾筒列表演示',
+  'app.menu.trash.listDemo': '钛合金',
+  'app.menu.trash.listDemo2': '铝合金',
+  'app.menu.trash.listDemo3': '高温合金',
+  'app.menu.trash.listDemo4': '钢',
+  'app.menu.trash.listDemo5': '私人订制合金',
 
   // Top Header
   'app.header.feedback': '反馈',

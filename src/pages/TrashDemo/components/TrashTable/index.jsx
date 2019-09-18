@@ -62,12 +62,6 @@ export default class TrashTable extends Component {
     });
   };
 
-  renderBit = (value) => {
-    return (
-      [<span>低电平</span>, <span>高电平</span>][value]
-    );
-  };
-
   renderOper = () => {
     return (
       <div>
@@ -89,11 +83,12 @@ export default class TrashTable extends Component {
       <div style={styles.container}>
         <IceContainer>
           <Table loading={isLoading} dataSource={data} hasBorder={false}>
-            <Table.Column title="设备ID" dataIndex="deviceId" />
-            <Table.Column title="lac" dataIndex="lac" />
-            <Table.Column title="ci" dataIndex="ci" />
-            <Table.Column title="输入端状态" dataIndex="inputStat" cell={this.renderBit} />
-            <Table.Column title="输出端状态" dataIndex="outputStat" cell={this.renderBit} />
+            <Table.Column title="名称" dataIndex="name" />
+            <Table.Column title="工艺" dataIndex="technique" />
+            <Table.Column title="粒径" dataIndex="diameter" />
+            <Table.Column title="球形度" dataIndex="sphereRatio" />
+            <Table.Column title="氧、氮含量" dataIndex="composition" />
+            <Table.Column title="综合性能" dataIndex="performance" />
             <Table.Column
               title="操作"
               width={200}

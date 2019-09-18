@@ -148,12 +148,29 @@ const asideMenuConfig = [
     icon: 'cascades',
     children: [
       {
-        name: 'list',
-        path: '/trash/list',
+        name: 'trashDemo',
+        path: '/trash/listDemo',
+        icon: 'cascades',
       },
       {
-        name: 'listDemo',
-        path: '/trash/listDemo',
+        name: 'trashDemo2',
+        path: '/trash/listDemo2',
+        icon: 'cascades',
+      },
+      {
+        name: 'trashDemo3',
+        path: '/trash/listDemo3',
+        icon: 'cascades',
+      },
+      {
+        name: 'trashDemo4',
+        path: '/trash/listDemo4',
+        icon: 'cascades',
+      },
+      {
+        name: 'trashDemo5',
+        path: '/trash/listDemo5',
+        icon: 'cascades',
       },
     ],
   },
