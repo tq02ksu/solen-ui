@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Pagination, Button, Dialog, Message, Input } from '@alifd/next';
+import { Table, Pagination, Button, Dialog, Message, Input, Icon, MenuButton } from '@alifd/next';
 import { FormattedMessage } from 'react-intl';
 import axios from 'axios';
 import IceContainer from '@icedesign/container';
@@ -27,12 +27,16 @@ export default class TrashTable extends Component {
       () => {
         axios({
           method: 'get',
-          url: '/api/listAll',
+          url: '/api/list',
+          params: {
+            pageSize,
+            pageNo: current,
+          },
         }).then(response => {
           const dat = response.data;
           this.setState({
-            total: dat.length,
-            data: dat.slice((current - 1) * pageSize, current * pageSize),
+            total: dat.total,
+            data: dat.data,
             isLoading: false,
           });
         });
@@ -53,7 +57,7 @@ export default class TrashTable extends Component {
 
   handleDetail = (deviceId) => {
     return () => {
-      axios.get(`/api/detail/${deviceId}`).then(response => {
+      axios.get(`/api/device/${deviceId}`).then(response => {
         const items = response.data.reports.map(report => {
           return <li>{report.time}: {report.content}</li>;
         });
@@ -116,6 +120,21 @@ export default class TrashTable extends Component {
     };
   };
 
+  handleDelete = (deviceId) => {
+    return () => {
+      Dialog.confirm({
+        title: '删除设备',
+        content: `确认删除设备 ${deviceId}`,
+        onOk: () => {
+          axios.delete(`/api/device/${deviceId}`)
+            .then(() => {
+              Message.success('Device Deleted!');
+            });
+        },
+      });
+    };
+  };
+
   inputOnChange = (val) => {
     this.setState({ message: val });
   };
@@ -149,10 +168,15 @@ export default class TrashTable extends Component {
     );
   };
 
-  renderStatus = (value) => {
-    return (
-      value.active ? <span>正常</span> : <span>已断开</span>
-    );
+  renderStatus = (status) => {
+    if (status === 'NORMAL') {
+      return (<Icon type="success" style={{ color: '#1DC11D' }} />);
+    } else if (status === 'LOST') {
+      return (<Icon type="warning" style={{ color: '#FFA003' }} />);
+    } else if (status === 'DISCONNECTED') {
+      return (<Icon type="error" style={{ color: '#FF3333' }} />);
+    }
+    return (<Icon type="loading" />);
   };
 
   renderOper = (deviceId) => {
@@ -180,13 +204,22 @@ export default class TrashTable extends Component {
             <FormattedMessage id="app.btn.shutdown" />
           </Button>
         </Button.Group>
-        <Button
-          type="normal"
-          style={{ marginLeft: '5px' }}
-          onClick={this.handleSendingAscii(deviceId)}
-        >
-          <FormattedMessage id="app.btn.message" />
-        </Button>
+        <MenuButton label="更多...">
+          <Button
+            type="normal"
+            style={{ marginLeft: '5px' }}
+            onClick={this.handleSendingAscii(deviceId)}
+          >
+            <FormattedMessage id="app.btn.message" />
+          </Button>
+          <Button
+            style={{ marginLeft: '5px' }}
+            warning
+            onClick={this.handleDelete(deviceId)}
+          >
+            <FormattedMessage id="app.btn.delete" />
+          </Button>
+        </MenuButton>
       </div>
     );
   };
@@ -199,7 +232,7 @@ export default class TrashTable extends Component {
         <IceContainer>
           <Table loading={isLoading} dataSource={data} hasBorder={false}>
             <Table.Column title="设备ID" dataIndex="deviceId" />
-            <Table.Column title="状态" dataIndex="channel" cell={this.renderStatus} />
+            <Table.Column title="状态" dataIndex="status" cell={this.renderStatus} />
             <Table.Column title="lac" dataIndex="lac" />
             <Table.Column title="ci" dataIndex="ci" />
             <Table.Column title="输入端状态" dataIndex="inputStat" cell={this.renderBit} />
