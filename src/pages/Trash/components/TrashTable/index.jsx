@@ -89,7 +89,9 @@ export default class TrashTable extends Component {
             }).then(() => {
               resolve();
               Message.success('Startup successfully !');
+              this.fetchData();
             }).catch((error) => {
+              resolve();
               Message.error(`error, status is ${error.response.statusText}`);
             });
           });
@@ -111,25 +113,12 @@ export default class TrashTable extends Component {
             }).then(() => {
               resolve();
               Message.success('Shutdown successfully !');
+              this.fetchData();
             }).catch((error) => {
+              resolve();
               Message.error(`error, status is ${error.response.statusText}`);
             });
           });
-        },
-      });
-    };
-  };
-
-  handleDelete = (deviceId) => {
-    return () => {
-      Dialog.confirm({
-        title: '删除设备',
-        content: `确认删除设备 ${deviceId}`,
-        onOk: () => {
-          axios.delete(`/api/device/${deviceId}`)
-            .then(() => {
-              Message.success('Device Deleted!');
-            });
         },
       });
     };
@@ -154,7 +143,29 @@ export default class TrashTable extends Component {
               resolve();
               Message.success('Message sent!');
             }).catch((error) => {
-              Message.error(`error, status is ${error.response.statusText}`);
+              resolve();
+              Message.error(`Sending error, caused by ${error.response.statusText}`);
+            });
+          });
+        },
+      });
+    };
+  };
+
+  handleDelete = (deviceId) => {
+    return () => {
+      Dialog.confirm({
+        title: '确认删除?',
+        content: '确认删除?',
+        onOk: () => {
+          return new Promise((resolve) => {
+            axios.delete(`/api/device/${deviceId}`).then(() => {
+              resolve();
+              Message.success('Device deleted!');
+              this.fetchData();
+            }).catch((error) => {
+              resolve();
+              Message.error(`Deletion error, caused by ${error.response.statusText}`);
             });
           });
         },
@@ -205,20 +216,20 @@ export default class TrashTable extends Component {
           </Button>
         </Button.Group>
         <MenuButton label="更多...">
-          <Button
+          <MenuButton.Item
             type="normal"
             style={{ marginLeft: '5px' }}
             onClick={this.handleSendingAscii(deviceId)}
           >
             <FormattedMessage id="app.btn.message" />
-          </Button>
-          <Button
+          </MenuButton.Item>
+          <MenuButton.Item
             style={{ marginLeft: '5px' }}
             warning
             onClick={this.handleDelete(deviceId)}
           >
             <FormattedMessage id="app.btn.delete" />
-          </Button>
+          </MenuButton.Item>
         </MenuButton>
       </div>
     );

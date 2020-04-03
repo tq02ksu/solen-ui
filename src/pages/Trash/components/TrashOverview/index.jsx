@@ -10,15 +10,15 @@ const { Row, Col } = Grid;
 @injectIntl
 export default class TrashOverview extends Component {
   state = {
-    data: [],
-  }
+    data: {},
+  };
 
   componentDidMount() {
     this.fetchData();
   }
 
   fetchData = () => {
-    const params = { field: 'inputStat' };
+    const params = { field: 'outputStat' };
     axios({
       method: 'get',
       url: '/api/statByField',
@@ -41,7 +41,7 @@ export default class TrashOverview extends Component {
     });
     Object.keys(data).map(key => formatted.push({
       percent: data[key] / total * 100,
-      title: ['低电平', '高电平'][key],
+      title: ['输出端低电平', '输出端高电平'][key],
       value: data[key],
     }));
 
