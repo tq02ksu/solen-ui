@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import { Table, Pagination, Button, Dialog, Message, Input, Icon, MenuButton } from '@alifd/next';
 import { FormattedMessage } from 'react-intl';
 import axios from 'axios';
@@ -66,8 +67,28 @@ export default class TrashTable extends Component {
           content:
             (
               <div>
-                <p>{deviceId} 收到的消息：</p>
-                <ul>{items}</ul>
+                <p>
+                  信号强度: {response.data.rssi}
+                </p>
+                <p>
+                  电压(V): {response.data.debugData1 / 10}
+                </p>
+                <p>
+                  温度(°C): {response.data.debugData2 / 10}
+                </p>
+                <p>
+                  重力(kg): {response.data.debugData3 / 10}
+                </p>
+                <p>
+                  运行时间(s): {moment.duration(response.data.debugData4, 'seconds').humanize()}
+                </p>
+                <p>
+                  调试信息5: {response.data.debugData5}
+                </p>
+                <p>
+                  {deviceId} 收到的消息：<br />
+                  <ul>{items}</ul>
+                </p>
               </div>
             ),
           footerActions: ['ok'],
