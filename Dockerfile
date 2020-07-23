@@ -10,4 +10,4 @@ FROM nginx:stable-alpine
 
 LABEL maintainer="tq02ksu@gmail.com"
 
-COPY --from=compile build/ /usr/share/nginx/html/
+COPY --from=compile /app/build/ /usr/share/nginx/html/
