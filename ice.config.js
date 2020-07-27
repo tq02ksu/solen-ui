@@ -9,4 +9,5 @@ module.exports = {
       locales: ['zh-cn'],
     }],
   ],
+  hash: true,
 };
