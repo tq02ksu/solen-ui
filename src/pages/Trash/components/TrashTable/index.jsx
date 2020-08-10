@@ -71,19 +71,16 @@ export default class TrashTable extends Component {
                   信号强度: {response.data.rssi}
                 </p>
                 <p>
-                  电压(V): {response.data.debugData1 / 10}
+                  电压(V): {response.data.voltage}
                 </p>
                 <p>
-                  温度(°C): {response.data.debugData2 / 10}
+                  温度(°C): {response.data.temperature}
                 </p>
                 <p>
-                  重力(kg): {response.data.debugData3 / 10}
+                  重力(N/kg, m/s<up>2</up>): {response.data.gravity}
                 </p>
                 <p>
                   运行时间(s): {moment.duration(response.data.debugData4, 'seconds').humanize()}
-                </p>
-                <p>
-                  调试信息5: {response.data.debugData5}
                 </p>
                 <p>
                   {deviceId} 收到的消息：<br />
