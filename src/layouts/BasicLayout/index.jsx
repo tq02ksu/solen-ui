@@ -43,15 +43,13 @@ export default class BasicLayout extends Component {
   };
 
   enquireScreenHandle = (type) => {
-    const handler = {
+    return {
       match: () => {
         this.setState({
           isScreen: type,
         });
       },
     };
-
-    return handler;
   };
 
   render() {
