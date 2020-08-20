@@ -72,7 +72,7 @@ export default class Aside extends Component {
     let openKeys = [];
     if (Array.isArray(menus)) {
       asideMenuConfig.forEach((item, index) => {
-        if (pathname.startsWith(item.path)) {
+        if (item.exact && item === item.path || pathname.startsWith(item.path)) {
           openKeys = [`${index}`];
         }
       });
