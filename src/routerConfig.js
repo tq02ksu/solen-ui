@@ -92,6 +92,10 @@ const routerConfig = [
     component: NotFound,
   },
   {
+    path: '/user/login:targetUrl',
+    component: UserLogin,
+  },
+  {
     path: '/user/login',
     component: UserLogin,
   },
@@ -110,5 +114,4 @@ const routerConfig = [
 ];
 
 const routerData = getRouterData(routerConfig, asideMenuConfig);
-
 export { routerData };

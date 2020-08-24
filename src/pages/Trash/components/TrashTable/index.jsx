@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Table, Pagination, Button, Dialog, Message, Input, Icon, MenuButton } from '@alifd/next';
+import { Balloon, Table, Pagination, Button, Dialog, Message, Input, Icon, MenuButton } from '@alifd/next';
 import { FormattedMessage } from 'react-intl';
-import axios from 'axios';
 import IceContainer from '@icedesign/container';
+import { iot as iotApi } from '../../../../api';
 import styles from './index.module.scss';
 
 export default class TrashTable extends Component {
@@ -16,33 +16,18 @@ export default class TrashTable extends Component {
   };
 
   componentDidMount() {
-    this.fetchData();
+    this.fetchData().catch(console.error);
   }
 
-  fetchData = () => {
+  fetchData = async () => {
     const { current, pageSize } = this.state;
-    this.setState(
-      {
-        isLoading: true,
-      },
-      () => {
-        axios({
-          method: 'get',
-          url: '/api/list',
-          params: {
-            pageSize,
-            pageNo: current,
-          },
-        }).then(response => {
-          const dat = response.data;
-          this.setState({
-            total: dat.total,
-            data: dat.data,
-            isLoading: false,
-          });
-        });
-      }
-    );
+    this.setState({ isLoading: true });
+    const response = await iotApi.list({ pageSize, pageNo: current });
+    this.setState({
+      total: response.data.total,
+      data: response.data.data,
+      isLoading: false,
+    });
   };
 
   handlePaginationChange = (current) => {
@@ -51,144 +36,115 @@ export default class TrashTable extends Component {
         current,
       },
       () => {
-        this.fetchData();
+        this.fetchData().catch(console.error);
       }
     );
   };
 
-  handleDetail = (deviceId) => {
-    return () => {
-      axios.get(`/api/device/${deviceId}`).then(response => {
-        const items = response.data.reports.map(report => {
-          return <li>{report.time}: {report.content}</li>;
+  handleDetail = async (deviceId) => {
+    const response = await iotApi.detail(deviceId);
+    Dialog.show({
+      title: '设备详细信息',
+      content: (
+        <div>
+          <h3>基本信息</h3>
+          <Table dataSource={[response.data]} size="small">
+            <Table.Column title="信号强度" dataIndex="rssi" />
+            <Table.Column title="电压(V)" dataIndex="voltage" />
+            <Table.Column title="温度(°C)" dataIndex="temperature" />
+            <Table.Column title="重力" dataIndex="gravity" />
+            <Table.Column
+              title="运行时间"
+              dataIndex="uptime"
+              cell={(value) => (
+                <Balloon
+                  closable={false}
+                  trigger={moment.duration(value, 'seconds').humanize()}
+                >
+                  {value} 秒
+                </Balloon>
+              )}
+            />
+          </Table>
+          <div style={response.data.reports ? {} : { display: 'none' }}>
+            <h3>收到的消息</h3>
+            <Table dataSource={response.data.reports} size="small">
+              <Table.Column
+                title="时间"
+                dataIndex="time"
+                width={100}
+                cell={
+                  (value) => {
+                    return (
+                      <Balloon
+                        closable={false}
+                        trigger={moment(value).fromNow()}
+                      >
+                        {value}
+                      </Balloon>
+                    );
+                  }
+                }
+              />
+              <Table.Column
+                title="内容"
+                dataIndex="content"
+              />
+            </Table>
+          </div>
+        </div>
+      ),
+      footerActions: ['ok'],
+    });
+  };
+
+  handleControl = (deviceId, ctrl) => {
+    Dialog.confirm({
+      title: '设备控制',
+      content: ctrl === 1 ? `确认启动设备 ${deviceId}` : `确认停止设备${deviceId}`,
+      onOk: async () => {
+        const data = await iotApi.control({
+          deviceId,
+          ctrl,
         });
-        Dialog.show({
-          title: '设备详细信息',
-          content:
-            (
-              <div>
-                <p>
-                  信号强度: {response.data.rssi}
-                </p>
-                <p>
-                  电压(V): {response.data.voltage}
-                </p>
-                <p>
-                  温度(°C): {response.data.temperature}
-                </p>
-                <p>
-                  重力(N/kg, m/s<up>2</up>): {response.data.gravity}
-                </p>
-                <p>
-                  运行时间(s): {moment.duration(response.data.debugData4, 'seconds').humanize()}
-                </p>
-                <p>
-                  {deviceId} 收到的消息：<br />
-                  <ul>{items}</ul>
-                </p>
-              </div>
-            ),
-          footerActions: ['ok'],
-        });
-      });
-    };
-  };
 
-  handleStartup = (deviceId) => {
-    return () => {
-      Dialog.confirm({
-        title: '启动设备',
-        content: `确认启动设备 ${deviceId}`,
-        onOk: () => {
-          return new Promise((resolve) => {
-            axios.post('/api/sendControl', {
-              deviceId,
-              ctrl: 1,
-            }).then(() => {
-              resolve();
-              Message.success('Startup successfully !');
-              this.fetchData();
-            }).catch((error) => {
-              resolve();
-              Message.error(`error, status is ${error.response.statusText}`);
-            });
-          });
-        },
-      });
-    };
-  };
-
-  handleShutdown = (deviceId) => {
-    return () => {
-      Dialog.confirm({
-        title: '关闭设备',
-        content: `确认关闭设备 ${deviceId}`,
-        onOk: () => {
-          return new Promise((resolve) => {
-            axios.post('/api/sendControl', {
-              deviceId,
-              ctrl: 0,
-            }).then(() => {
-              resolve();
-              Message.success('Shutdown successfully !');
-              this.fetchData();
-            }).catch((error) => {
-              resolve();
-              Message.error(`error, status is ${error.response.statusText}`);
-            });
-          });
-        },
-      });
-    };
-  };
-
-  inputOnChange = (val) => {
-    this.setState({ message: val });
+        if (data) {
+          Message.success('操作成功!');
+          this.fetchData().catch(console.error);
+        }
+      },
+    });
   };
 
   handleSendingAscii = (deviceId) => {
-    return () => {
-      Dialog.confirm({
-        title: '发送文本命令',
-        content: <Input placeholder="请输出消息: " onChange={this.inputOnChange} />,
-        onOk: () => {
-          return new Promise((resolve) => {
-            const { message } = this.state;
-            axios.post('/api/sendAscii', {
-              deviceId,
-              data: message,
-            }).then(() => {
-              resolve();
-              Message.success('Message sent!');
-            }).catch((error) => {
-              resolve();
-              Message.error(`Sending error, caused by ${error.response.statusText}`);
-            });
-          });
-        },
-      });
-    };
+    Dialog.confirm({
+      title: '发送文本信息',
+      content: (
+        <Input
+          placeholder="请输出消息: "
+          onChange={val => this.setState({ message: val })}
+        />),
+      onOk: async () => {
+        const { message } = this.state;
+        const data = await iotApi.ascii({ deviceId, data: message });
+        if (data) {
+          Message.success('Message sent!');
+        }
+      },
+    });
   };
 
   handleDelete = (deviceId) => {
-    return () => {
-      Dialog.confirm({
-        title: '确认删除?',
-        content: '确认删除?',
-        onOk: () => {
-          return new Promise((resolve) => {
-            axios.delete(`/api/device/${deviceId}`).then(() => {
-              resolve();
-              Message.success('Device deleted!');
-              this.fetchData();
-            }).catch((error) => {
-              resolve();
-              Message.error(`Deletion error, caused by ${error.response.statusText}`);
-            });
-          });
-        },
-      });
-    };
+    Dialog.confirm({
+      title: '确认删除?',
+      content: '确认删除?',
+      onOk: async () => {
+        const data = await iotApi.deletion(deviceId);
+        if (data) {
+          Message.success('Device deleted!');
+        }
+      },
+    });
   };
 
   renderBit = (value) => {
@@ -208,27 +164,27 @@ export default class TrashTable extends Component {
     return (<Icon type="loading" />);
   };
 
-  renderOper = (deviceId) => {
+  renderOperations = (deviceId) => {
     return (
       <div>
         <Button
           type="primary"
           style={{ marginRight: '5px' }}
-          onClick={this.handleDetail(deviceId)}
+          onClick={() => this.handleDetail(deviceId).catch(console.error)}
         >
           <FormattedMessage id="app.btn.detail" />
         </Button>
         <Button.Group>
           <Button
             type="secondary"
-            onClick={this.handleStartup(deviceId)}
+            onClick={() => this.handleControl(deviceId, 1)}
           >
             <FormattedMessage id="app.btn.startup" />
           </Button>
           <Button
             type="normal"
             warning
-            onClick={this.handleShutdown(deviceId)}
+            onClick={() => this.handleControl(deviceId, 0)}
           >
             <FormattedMessage id="app.btn.shutdown" />
           </Button>
@@ -237,14 +193,14 @@ export default class TrashTable extends Component {
           <MenuButton.Item
             type="normal"
             style={{ marginLeft: '5px' }}
-            onClick={this.handleSendingAscii(deviceId)}
+            onClick={() => this.handleSendingAscii(deviceId)}
           >
             <FormattedMessage id="app.btn.message" />
           </MenuButton.Item>
           <MenuButton.Item
             style={{ marginLeft: '5px' }}
             warning
-            onClick={this.handleDelete(deviceId)}
+            onClick={() => this.handleDelete(deviceId)}
           >
             <FormattedMessage id="app.btn.delete" />
           </MenuButton.Item>
@@ -257,30 +213,28 @@ export default class TrashTable extends Component {
     const { current, total, isLoading, data } = this.state;
 
     return (
-      <div style={styles.container}>
-        <IceContainer>
-          <Table loading={isLoading} dataSource={data} hasBorder={false}>
-            <Table.Column title="设备ID" dataIndex="deviceId" />
-            <Table.Column title="状态" dataIndex="status" cell={this.renderStatus} />
-            <Table.Column title="lac" dataIndex="lac" />
-            <Table.Column title="ci" dataIndex="ci" />
-            <Table.Column title="输入端状态" dataIndex="inputStat" cell={this.renderBit} />
-            <Table.Column title="输出端状态" dataIndex="outputStat" cell={this.renderBit} />
-            <Table.Column
-              title="操作"
-              width={400}
-              dataIndex="deviceId"
-              cell={this.renderOper}
-            />
-          </Table>
-          <Pagination
-            className={styles.pagination}
-            current={current}
-            total={total}
-            onChange={this.handlePaginationChange}
+      <IceContainer>
+        <Table loading={isLoading} dataSource={data} hasBorder={false}>
+          <Table.Column title="设备ID" dataIndex="deviceId" />
+          <Table.Column title="状态" dataIndex="status" cell={this.renderStatus} />
+          <Table.Column title="lac" dataIndex="lac" />
+          <Table.Column title="ci" dataIndex="ci" />
+          <Table.Column title="输入端状态" dataIndex="inputStat" cell={this.renderBit} />
+          <Table.Column title="输出端状态" dataIndex="outputStat" cell={this.renderBit} />
+          <Table.Column
+            title="操作"
+            width={400}
+            dataIndex="deviceId"
+            cell={this.renderOperations}
           />
-        </IceContainer>
-      </div>
+        </Table>
+        <Pagination
+          className={styles.pagination}
+          current={current}
+          total={total}
+          onChange={this.handlePaginationChange}
+        />
+      </IceContainer>
     );
   }
 }

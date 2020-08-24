@@ -18,6 +18,7 @@
     "bizcharts": "^3.2.2",
     "bizgoblin": "0.0.1",
     "classnames": "^2.2.5",
+    "crypto-js": "^4.0.0",
     "enquire-js": "^0.1.2",
     "history": "^4.7.2",
     "hoist-non-react-statics": "^2.5.5",

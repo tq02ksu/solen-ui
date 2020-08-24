@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Grid, Progress } from '@alifd/next';
 import { injectIntl } from 'react-intl';
-import axios from 'axios';
 import IceContainer from '@icedesign/container';
 import styles from './index.module.scss';
+import { iot as iotApi } from '../../../../api';
 
 const { Row, Col } = Grid;
 
@@ -14,19 +14,15 @@ export default class TrashOverview extends Component {
   };
 
   componentDidMount() {
-    this.fetchData();
-  }
+    const fetchData = async () => {
+      const response = await iotApi.statByField({
+        field: 'outputStat',
+      });
+      this.setState({ data: response.data || {} });
+    };
 
-  fetchData = () => {
-    const params = { field: 'outputStat' };
-    axios({
-      method: 'get',
-      url: '/api/statByField',
-      params,
-    }).then(response => {
-      this.setState({ data: response.data });
-    });
-  };
+    fetchData().catch(console.error);
+  }
 
   render() {
     const { data } = this.state;
