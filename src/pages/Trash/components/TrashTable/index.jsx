@@ -148,8 +148,11 @@ export default class TrashTable extends Component {
   };
 
   renderBit = (value) => {
+    if (value === undefined || value === null) {
+      return '未知';
+    }
     return (
-      [<span>低电平</span>, <span>高电平</span>][value]
+      ['低电平', '高电平'][value]
     );
   };
 
@@ -217,10 +220,27 @@ export default class TrashTable extends Component {
         <Table loading={isLoading} dataSource={data} hasBorder={false}>
           <Table.Column title="设备ID" dataIndex="deviceId" />
           <Table.Column title="状态" dataIndex="status" cell={this.renderStatus} />
-          <Table.Column title="lac" dataIndex="lac" />
-          <Table.Column title="ci" dataIndex="ci" />
+          <Table.Column
+            title="基站信息(lac, ci)"
+            cell={(value, index, record) => {
+              if (record.lac === undefined || record.lac === null) {
+                return '-';
+              }
+              return `${record.lac}, ${record.ci}`;
+            }}
+          />
           <Table.Column title="输入端状态" dataIndex="inputStat" cell={this.renderBit} />
           <Table.Column title="输出端状态" dataIndex="outputStat" cell={this.renderBit} />
+          <Table.Column
+            title="坐标(北纬, 东经)"
+            cell={(value, index, record) => {
+              if (record.northLat === undefined || record.northLat === null) {
+                return '-';
+              }
+              return `${record.northLat}, ${record.eastLong}`;
+            }}
+          />
+          <Table.Column title="IMEI" dataIndex="iccId" cell={v => (v === undefined || v === null ? '-' : v)} />
           <Table.Column
             title="操作"
             width={400}
