@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import moment from 'moment';
-import { Balloon, Table, Pagination, Button, Dialog, Message, Input, Icon, MenuButton } from '@alifd/next';
+import { Table, Pagination, Button, Dialog, Message, Input, Icon, MenuButton } from '@alifd/next';
 import { FormattedMessage } from 'react-intl';
 import IceContainer from '@icedesign/container';
 import { iot as iotApi } from '../../../../api';
 import styles from './index.module.scss';
+import DeviceInfoDialog from '../DeviceInfoDialog';
 
 export default class TrashTable extends Component {
   state = {
@@ -13,6 +13,8 @@ export default class TrashTable extends Component {
     total: 0,
     isLoading: true,
     data: [],
+    dialogVisible: false,
+    dialogDeviceId: undefined,
   };
 
   componentDidMount() {
@@ -42,59 +44,9 @@ export default class TrashTable extends Component {
   };
 
   handleDetail = async (deviceId) => {
-    const response = await iotApi.detail(deviceId);
-    Dialog.show({
-      title: '设备详细信息',
-      content: (
-        <div>
-          <h3>基本信息</h3>
-          <Table dataSource={[response.data]} size="small">
-            <Table.Column title="信号强度" dataIndex="rssi" />
-            <Table.Column title="电压(V)" dataIndex="voltage" />
-            <Table.Column title="温度(°C)" dataIndex="temperature" />
-            <Table.Column title="重力" dataIndex="gravity" />
-            <Table.Column
-              title="运行时间"
-              dataIndex="uptime"
-              cell={(value) => (
-                <Balloon
-                  closable={false}
-                  trigger={moment.duration(value, 'seconds').humanize()}
-                >
-                  {value} 秒
-                </Balloon>
-              )}
-            />
-          </Table>
-          <div style={response.data.reports ? {} : { display: 'none' }}>
-            <h3>收到的消息</h3>
-            <Table dataSource={response.data.reports} size="small">
-              <Table.Column
-                title="时间"
-                dataIndex="time"
-                width={100}
-                cell={
-                  (value) => {
-                    return (
-                      <Balloon
-                        closable={false}
-                        trigger={moment(value).fromNow()}
-                      >
-                        {value}
-                      </Balloon>
-                    );
-                  }
-                }
-              />
-              <Table.Column
-                title="内容"
-                dataIndex="content"
-              />
-            </Table>
-          </div>
-        </div>
-      ),
-      footerActions: ['ok'],
+    this.setState({
+      dialogVisible: true,
+      dialogDeviceId: deviceId,
     });
   };
 
@@ -231,15 +183,6 @@ export default class TrashTable extends Component {
           />
           <Table.Column title="输入端状态" dataIndex="inputStat" cell={this.renderBit} />
           <Table.Column title="输出端状态" dataIndex="outputStat" cell={this.renderBit} />
-          <Table.Column
-            title="坐标(北纬, 东经)"
-            cell={(value, index, record) => {
-              if (record.northLat === undefined || record.northLat === null) {
-                return '-';
-              }
-              return `${record.northLat}, ${record.eastLong}`;
-            }}
-          />
           <Table.Column title="IMEI" dataIndex="iccId" cell={v => (v === undefined || v === null ? '-' : v)} />
           <Table.Column
             title="操作"
@@ -253,6 +196,11 @@ export default class TrashTable extends Component {
           current={current}
           total={total}
           onChange={this.handlePaginationChange}
+        />
+        <DeviceInfoDialog
+          visible={this.state.dialogVisible}
+          onClose={() => this.setState({ dialogVisible: false })}
+          deviceId={this.state.dialogDeviceId}
         />
       </IceContainer>
     );
