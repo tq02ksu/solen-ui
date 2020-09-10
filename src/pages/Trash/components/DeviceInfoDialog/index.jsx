@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Balloon, Dialog, Icon, Table } from '@alifd/next';
+import { Balloon, Dialog, Icon, Table, Tab } from '@alifd/next';
 import moment from 'moment';
-import { Map, APILoader, Marker } from '@uiw/react-baidu-map';
+import { Map, APILoader, Marker, Label } from '@uiw/react-baidu-map';
 import PropTypes from 'prop-types';
 import { iot as iotApi } from '../../../../api';
 
@@ -33,7 +33,7 @@ export default class DeviceInfoDialog extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.visible && prevProps.deviceId !== this.props.deviceId) {
+    if (this.props.visible && prevProps.visible === false) {
       this.fetchData().catch(console.error);
     }
   }
@@ -63,9 +63,9 @@ export default class DeviceInfoDialog extends Component {
               <Marker
                 position={coordinate}
                 type="loc_blue"
-                title={`${coordinate.lat}, ${coordinate.lng}`}
-                animation={2}
+                animation={1}
               />
+              <Label position={coordinate} content={`坐标: ${coordinate.lat}, ${coordinate.lng}`} />
             </Map>
           </APILoader>
         </div>
@@ -83,56 +83,66 @@ export default class DeviceInfoDialog extends Component {
         onOk={onClose}
         onClose={onClose}
         visible={visible}
+        height={500}
       >
-        <div>
-          <h3>基本信息</h3>
-          <Table dataSource={[device]} size="small">
-            <Table.Column title="设备ID" dataIndex="deviceId" />
-            <Table.Column title="信号强度" dataIndex="rssi" />
-            <Table.Column title="电压(V)" dataIndex="voltage" />
-            <Table.Column title="温度(°C)" dataIndex="temperature" />
-            <Table.Column title="重力" dataIndex="gravity" />
-            <Table.Column
-              title="运行时间"
-              dataIndex="uptime"
-              cell={(value) => (
-                <Balloon
-                  closable={false}
-                  trigger={moment.duration(value, 'seconds').humanize()}
-                >
-                  {value} 秒
-                </Balloon>
-              )}
-            />
-          </Table>
-          {this.renderLocationInfo()}
-          <div style={device.reports ? {} : { display: 'none' }}>
-            <h3>收到的消息</h3>
-            <Table dataSource={device.reports} size="small">
+        <Tab style={{ width: 680 }}>
+          <Tab.Item title="基本信息" key="basic">
+            <h3>基本信息</h3>
+            <Table dataSource={[device]} size="small">
+              <Table.Column title="设备ID" dataIndex="deviceId" />
+              <Table.Column title="信号强度" dataIndex="rssi" />
+              <Table.Column title="电压(V)" dataIndex="voltage" />
+              <Table.Column title="温度(°C)" dataIndex="temperature" />
+              <Table.Column title="重力" dataIndex="gravity" />
               <Table.Column
-                title="时间"
-                dataIndex="time"
-                width={100}
-                cell={
-                  (value) => {
-                    return (
-                      <Balloon
-                        closable={false}
-                        trigger={moment(value).fromNow()}
-                      >
-                        {value}
-                      </Balloon>
-                    );
-                  }
-                }
-              />
-              <Table.Column
-                title="内容"
-                dataIndex="content"
+                title="运行时间"
+                dataIndex="uptime"
+                cell={(value) => (
+                  <Balloon
+                    closable={false}
+                    trigger={moment.duration(value, 'seconds').humanize()}
+                  >
+                    {value} 秒
+                  </Balloon>
+                )}
               />
             </Table>
-          </div>
-        </div>
+          </Tab.Item>
+          <Tab.Item title="位置信息" key="location">
+            {this.renderLocationInfo()}
+          </Tab.Item>
+          <Tab.Item title="串口通讯" key="serial-port">
+            <p style={device.reports === [] ? {} : { display: 'none' }}>
+              <Icon type="prompt" size="small" /> 位置信息不可用
+            </p>
+            <div style={device.reports ? {} : { display: 'none' }}>
+              <h3>收到的消息</h3>
+              <Table dataSource={device.reports} size="small">
+                <Table.Column
+                  title="时间"
+                  dataIndex="time"
+                  width={100}
+                  cell={
+                    (value) => {
+                      return (
+                        <Balloon
+                          closable={false}
+                          trigger={moment(value).fromNow()}
+                        >
+                          {value}
+                        </Balloon>
+                      );
+                    }
+                  }
+                />
+                <Table.Column
+                  title="内容"
+                  dataIndex="content"
+                />
+              </Table>
+            </div>
+          </Tab.Item>
+        </Tab>
       </Dialog>
     );
   }

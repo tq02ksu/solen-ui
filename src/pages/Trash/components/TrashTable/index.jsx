@@ -146,7 +146,6 @@ export default class TrashTable extends Component {
         </Button.Group>
         <MenuButton label="更多...">
           <MenuButton.Item
-            type="normal"
             style={{ marginLeft: '5px' }}
             onClick={() => this.handleSendingAscii(deviceId)}
           >
@@ -154,7 +153,6 @@ export default class TrashTable extends Component {
           </MenuButton.Item>
           <MenuButton.Item
             style={{ marginLeft: '5px' }}
-            warning
             onClick={() => this.handleDelete(deviceId)}
           >
             <FormattedMessage id="app.btn.delete" />
