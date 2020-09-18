@@ -152,8 +152,8 @@ const asideMenuConfig = [
         path: '/trash/list',
       },
       {
-        name: 'listDemo',
-        path: '/trash/listDemo',
+        name: 'event',
+        path: '/event/list',
       },
     ],
   },

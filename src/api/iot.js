@@ -48,4 +48,9 @@ export default {
       params,
     });
   },
+
+  async events(params) {
+    const url = '/api/event/list';
+    return util.request({ url, params });
+  },
 };

@@ -22,6 +22,7 @@ export default class TrashTable extends Component {
   }
 
   fetchData = async () => {
+    this.setState({ isLoading: true });
     const { current, pageSize } = this.state;
     this.setState({ isLoading: true });
     const response = await iotApi.list({ pageSize, pageNo: current });
@@ -181,7 +182,7 @@ export default class TrashTable extends Component {
           />
           <Table.Column title="输入端状态" dataIndex="inputStat" cell={this.renderBit} />
           <Table.Column title="输出端状态" dataIndex="outputStat" cell={this.renderBit} />
-          <Table.Column title="IMEI" dataIndex="iccId" cell={v => (v === undefined || v === null ? '-' : v)} />
+          <Table.Column title="ICCID" dataIndex="iccId" cell={v => (v === undefined || v === null ? '-' : v)} />
           <Table.Column
             title="操作"
             width={400}

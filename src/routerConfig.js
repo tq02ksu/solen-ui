@@ -25,7 +25,7 @@ const NotFound = React.lazy(() => import('./pages/Exception/NotFound'));
 const ServerError = React.lazy(() => import('./pages/Exception/ServerError'));
 const Trash = React.lazy(() => import('./pages/Trash'));
 const TrashDemo = React.lazy(() => import('./pages/TrashDemo'));
-
+const Event = React.lazy(() => import('./pages/Event'));
 const routerConfig = [
   {
     path: '/dashboard/monitor',
@@ -108,8 +108,8 @@ const routerConfig = [
     component: Trash,
   },
   {
-    path: '/trash/listDemo',
-    component: TrashDemo,
+    path: '/event/list',
+    component: Event,
   },
 ];
 

@@ -32,9 +32,9 @@ export default {
   'app.menu.exception.403': '403',
   'app.menu.exception.500': '500',
 
-  'app.menu.trash': '垃圾筒',
-  'app.menu.trash.list': '垃圾筒列表',
-  'app.menu.trash.listDemo': '垃圾筒列表演示',
+  'app.menu.trash': 'IOT',
+  'app.menu.trash.list': '终端',
+  'app.menu.event.list': '事件',
 
   // Top Header
   'app.header.feedback': '反馈',

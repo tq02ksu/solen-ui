@@ -83,7 +83,7 @@ export default class DeviceInfoDialog extends Component {
         onOk={onClose}
         onClose={onClose}
         visible={visible}
-        height={500}
+        height="500"
       >
         <Tab style={{ width: 680 }}>
           <Tab.Item title="基本信息" key="basic">
