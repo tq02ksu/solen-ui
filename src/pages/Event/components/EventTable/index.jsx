@@ -92,23 +92,6 @@ export default class EventTable extends Component {
             onChange={v => this.setState({ deviceId: v })}
           />
           <span>&nbsp;&nbsp;</span>
-          <span>行数: </span>
-          <Select
-            name="pageSize"
-            key="pageSize"
-            dataSource={
-              [
-                { label: '10', value: '10' },
-                { label: '50', value: '50' },
-                { label: '100', value: '100' },
-                { label: '500', value: '500' },
-                { label: '1000', value: '1000' },
-              ]}
-            value={this.state.pageSize}
-            onChange={v => this.setState({ pageSize: Number(v) })}
-            style={{ width: 100 }}
-          />
-          <span>&nbsp;&nbsp;</span>
           <Button onClick={() => this.fetchData().catch(console.error)} key="refresh">
             <Icon type="refresh" />
           </Button>
@@ -117,7 +100,7 @@ export default class EventTable extends Component {
           dataSource={this.state.list}
           loading={this.state.loading}
         >
-          <Table.Column title="id" dataIndex="id" key="id" width={60} />
+          <Table.Column title="Event-ID" dataIndex="eventId" key="eventId" width={60} />
           <Table.Column title="时间" dataIndex="time" key="time" width={150} />
           <Table.Column title="设备ID" dataIndex="deviceId" key="deviceId" width={100} />
           <Table.Column title="类型" dataIndex="type" key="type" width={150} />
@@ -131,9 +114,9 @@ export default class EventTable extends Component {
                 if (val === undefined || val === null) {
                   return '-';
                 }
-
                 const trigger = (
                   <span
+                    key="eventId"
                     style={
                       {
                         overflow: 'hidden',
@@ -147,17 +130,13 @@ export default class EventTable extends Component {
                   >
                     {JSON.stringify(val)}
                   </span>);
-
                 return (
-                  <Balloon
-                    closable={false}
-                    trigger={trigger}
-                  >
+                  <Balloon closable={false} trigger={trigger}>
                     <ul>
                       {
                         Object.keys(val)
                           .map(key =>
-                            (<li key={key}><b>{key}: </b> {val[key]}</li>)
+                            (<li key><b>{key}: </b> {val[key]}</li>)
                           )
                       }
                     </ul>
