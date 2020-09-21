@@ -44,9 +44,6 @@ export default class EventTable extends Component {
     this.setState(
       {
         pageNo: current,
-      },
-      () => {
-        this.fetchData().catch(console.error);
       }
     );
   };
@@ -127,7 +124,7 @@ export default class EventTable extends Component {
           <Table.Column
             title="详情"
             dataIndex="details"
-            key="id"
+            key="details"
             width={400}
             cell={
               (val) => {
