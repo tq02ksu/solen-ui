@@ -7,7 +7,7 @@ const appKey = 'test';
 const secretKey = 'test';
 
 const handleResponse = (response) => {
-  if (response.status !== 200) {
+  if (response.status === 401) {
     const error = new Error(response.statusText || '后端接口异常');
     return { error };
   }
@@ -43,11 +43,7 @@ export default {
     try {
       const response = await axios({ ...options, params });
       const { data, error } = handleResponse(response);
-      if (error) {
-        throw error;
-      } else {
-        return { response, data };
-      }
+      return { response, data, error };
     } catch (error) {
       showError(error.message);
       createHashHistory().push('/user/login');

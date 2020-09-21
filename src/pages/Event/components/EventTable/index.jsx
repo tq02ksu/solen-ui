@@ -21,6 +21,7 @@ export default class EventTable extends Component {
     deviceId: this.props.deviceId,
     list: [],
     loading: false,
+    total: 0,
   };
 
   fetchData = async () => {
@@ -33,7 +34,10 @@ export default class EventTable extends Component {
       pageSize,
     });
 
-    this.setState({ list: response.data });
+    this.setState({
+      list: response.data,
+      total: response.data.length === pageSize ? (pageNo + 1) * pageSize : pageNo * pageSize,
+    });
   };
 
   handlePaginationChange = (current) => {
@@ -170,8 +174,7 @@ export default class EventTable extends Component {
           className={styles.pagination}
           pageSize={this.state.pageSize}
           current={this.state.pageNo}
-          total={this.state.list.length === this.props.pageSize
-            ? (this.state.pageNo + 1) * this.state.pageSize : this.state.pageNo * this.state.pageSize}
+          total={this.state.total}
           onChange={this.handlePaginationChange}
         />
       </IceContainer>
