@@ -100,7 +100,7 @@ export default class EventTable extends Component {
           dataSource={this.state.list}
           loading={this.state.loading}
         >
-          <Table.Column title="Event-ID" dataIndex="eventId" key="eventId" width={60} />
+          <Table.Column title="事件ID" dataIndex="eventId" key="eventId" width={60} />
           <Table.Column title="时间" dataIndex="time" key="time" width={150} />
           <Table.Column title="设备ID" dataIndex="deviceId" key="deviceId" width={100} />
           <Table.Column title="类型" dataIndex="type" key="type" width={150} />
