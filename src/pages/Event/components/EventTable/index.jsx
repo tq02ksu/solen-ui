@@ -72,7 +72,7 @@ export default class EventTable extends Component {
               secondStep: 10,
             }}
             resetTime
-            onChange={v => this.setState({ startTime: v })}
+            onChange={v => this.setState({ startTime: v, pageNo: 1 })}
           />
           <span>&nbsp;&nbsp;</span>
           <span>结束时间: </span>
@@ -82,14 +82,14 @@ export default class EventTable extends Component {
               secondStep: 10,
             }}
             resetTime
-            onChange={v => this.setState({ endTime: v })}
+            onChange={v => this.setState({ endTime: v, pageNo: 1 })}
           />
           <span>&nbsp;&nbsp;</span>
           <span>设备ID: </span>
           <Input
             name="deviceId"
             value={this.state.deviceId}
-            onChange={v => this.setState({ deviceId: v })}
+            onChange={v => this.setState({ deviceId: v, pageNo: 1 })}
           />
           <span>&nbsp;&nbsp;</span>
           <Button onClick={() => this.fetchData().catch(console.error)} key="refresh">
