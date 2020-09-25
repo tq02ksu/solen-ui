@@ -8,7 +8,8 @@ import DeviceInfoDialog from '../DeviceInfoDialog';
 
 export default class TrashTable extends Component {
   state = {
-    current: 1,
+    deviceId: '',
+    pageNo: 1,
     pageSize: 10,
     total: 0,
     isLoading: true,
@@ -23,9 +24,9 @@ export default class TrashTable extends Component {
 
   fetchData = async () => {
     this.setState({ isLoading: true });
-    const { current, pageSize } = this.state;
+    const { pageNo, pageSize, deviceId } = this.state;
     this.setState({ isLoading: true });
-    const response = await iotApi.list({ pageSize, pageNo: current });
+    const response = await iotApi.list({ pageSize, pageNo, deviceId });
     this.setState({
       total: response.data.total,
       data: response.data.data,
@@ -33,10 +34,10 @@ export default class TrashTable extends Component {
     });
   };
 
-  handlePaginationChange = (current) => {
+  handlePaginationChange = (pageNo) => {
     this.setState(
       {
-        current,
+        pageNo,
       },
       () => {
         this.fetchData().catch(console.error);
@@ -164,10 +165,23 @@ export default class TrashTable extends Component {
   };
 
   render() {
-    const { current, total, isLoading, data } = this.state;
+    const { pageNo, total, isLoading, data } = this.state;
 
     return (
       <IceContainer>
+        {/* search bar */}
+        <div style={{ marginBottom: 20 }}>
+          <span>设备ID: </span>
+          <Input
+            name="deviceId"
+            value={this.state.deviceId}
+            onChange={v => this.setState({ deviceId: v, pageNo: 1 })}
+          />
+          <span>&nbsp;&nbsp;</span>
+          <Button onClick={() => this.fetchData().catch(console.error)}>
+            <Icon type="refresh" />
+          </Button>
+        </div>
         <Table loading={isLoading} dataSource={data} hasBorder={false}>
           <Table.Column title="设备ID" dataIndex="deviceId" />
           <Table.Column title="状态" dataIndex="status" cell={this.renderStatus} />
@@ -192,7 +206,7 @@ export default class TrashTable extends Component {
         </Table>
         <Pagination
           className={styles.pagination}
-          current={current}
+          current={pageNo}
           total={total}
           onChange={this.handlePaginationChange}
         />
