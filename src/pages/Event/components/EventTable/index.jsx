@@ -26,6 +26,7 @@ export default class EventTable extends Component {
 
   fetchData = async () => {
     const { startTime, endTime, deviceId, pageNo, pageSize } = this.state;
+    this.setState({ loading: true });
     const response = await iotApi.events({
       startTime: startTime === undefined ? undefined : startTime.format('YYYY-MM-DD HH:mm:ss'),
       endTime: endTime === undefined ? undefined : endTime.format('YYYY-MM-DD HH:mm:ss'),
@@ -37,6 +38,7 @@ export default class EventTable extends Component {
     this.setState({
       list: response.data,
       total: response.data.length === pageSize ? (pageNo + 1) * pageSize : pageNo * pageSize,
+      loading: false,
     });
   };
 
