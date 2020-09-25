@@ -96,6 +96,7 @@ export default class TrashTable extends Component {
         const data = await iotApi.deletion(deviceId);
         if (data) {
           Message.success('Device deleted!');
+          this.fetchData().catch(console.error);
         }
       },
     });
