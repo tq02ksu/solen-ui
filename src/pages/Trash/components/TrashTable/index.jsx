@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Table, Pagination, Button, Dialog, Message, Input, Icon, MenuButton } from '@alifd/next';
 import { FormattedMessage } from 'react-intl';
 import IceContainer from '@icedesign/container';
@@ -184,7 +185,13 @@ export default class TrashTable extends Component {
           </Button>
         </div>
         <Table loading={isLoading} dataSource={data} hasBorder={false}>
-          <Table.Column title="设备ID" dataIndex="deviceId" />
+          <Table.Column
+            title="设备ID"
+            dataIndex="deviceId"
+            cell={(value) => {
+              return (<Link to={`/trash/device/${value}`}>{value}</Link>);
+            }}
+          />
           <Table.Column title="状态" dataIndex="status" cell={this.renderStatus} />
           <Table.Column
             title="基站信息(lac, ci)"
@@ -220,4 +227,3 @@ export default class TrashTable extends Component {
     );
   }
 }
-

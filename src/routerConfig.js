@@ -24,7 +24,7 @@ const Forbidden = React.lazy(() => import('./pages/Exception/Forbidden'));
 const NotFound = React.lazy(() => import('./pages/Exception/NotFound'));
 const ServerError = React.lazy(() => import('./pages/Exception/ServerError'));
 const Trash = React.lazy(() => import('./pages/Trash'));
-const TrashDemo = React.lazy(() => import('./pages/TrashDemo'));
+const DeviceDetailPage = React.lazy(() => import('./pages/Trash/components/DeviceDetailPage'));
 const Event = React.lazy(() => import('./pages/Event'));
 const routerConfig = [
   {
@@ -102,6 +102,10 @@ const routerConfig = [
   {
     path: '/user/register',
     component: UserRegister,
+  },
+  {
+    path: '/trash/device/:deviceId',
+    component: DeviceDetailPage,
   },
   {
     path: '/trash/list',
