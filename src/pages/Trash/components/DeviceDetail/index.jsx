@@ -81,6 +81,10 @@ export default class DeviceDetail extends Component {
       { column: 'gravity', label: '重力', value: device.gravity },
       { column: 'uptime', label: '运行时间', value: device.uptime },
     ];
+    console.log(device);
+    const authDataSource = [
+      { column: 'auth.owners', label: '归属', value: device.auth?.owners?.join(', ') },
+    ];
     return (
       <Tab>
         <Tab.Item title="基本信息" key="basic">
@@ -105,6 +109,11 @@ export default class DeviceDetail extends Component {
                 return value;
               }}
             />
+          </Table>
+          <h3>授权信息</h3>
+          <Table dataSource={authDataSource} size="small">
+            <Table.Column title="属性" key="label" dataIndex="label" />
+            <Table.Column title="值" key="value" dataIndex="value" />
           </Table>
         </Tab.Item>
         <Tab.Item title="位置信息" key="location">

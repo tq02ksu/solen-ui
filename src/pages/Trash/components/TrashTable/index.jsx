@@ -17,6 +17,7 @@ export default class TrashTable extends Component {
     data: [],
     dialogVisible: false,
     dialogDeviceId: undefined,
+    auth: undefined,
   };
 
   componentDidMount() {
@@ -89,6 +90,24 @@ export default class TrashTable extends Component {
     });
   };
 
+  handleUpdateAuth = (deviceId) => {
+    Dialog.confirm({
+      title: '设置归属',
+      content: (
+        <Input
+          placeholder="请输出归属用户: "
+          onChange={val => this.setState({ auth: val })}
+        />),
+      onOk: async () => {
+        const { auth } = this.state;
+        const data = await iotApi.auth(deviceId, { owners: auth.split(/,[ ]*/) });
+        if (data) {
+          Message.success('Auth info set!');
+        }
+      },
+    });
+  };
+
   handleDelete = (deviceId) => {
     Dialog.confirm({
       title: '确认删除?',
@@ -154,6 +173,12 @@ export default class TrashTable extends Component {
             onClick={() => this.handleSendingAscii(deviceId)}
           >
             <FormattedMessage id="app.btn.message" />
+          </MenuButton.Item>
+          <MenuButton.Item
+            style={{ marginLeft: '5px' }}
+            onClick={() => this.handleUpdateAuth(deviceId)}
+          >
+            授权
           </MenuButton.Item>
           <MenuButton.Item
             style={{ marginLeft: '5px' }}

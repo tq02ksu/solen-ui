@@ -53,4 +53,9 @@ export default {
     const url = '/api/event/list';
     return util.request({ url, params });
   },
+
+  async auth(deviceId, auth) {
+    const url = `/api/device/${deviceId}/auth`;
+    return util.request({ url, data: auth, method: 'POST' });
+  },
 };
