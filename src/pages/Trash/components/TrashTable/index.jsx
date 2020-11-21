@@ -17,6 +17,7 @@ export default class TrashTable extends Component {
     data: [],
     dialogVisible: false,
     dialogDeviceId: undefined,
+    bindingDeviceId: undefined,
     auth: undefined,
   };
 
@@ -90,19 +91,44 @@ export default class TrashTable extends Component {
     });
   };
 
-  handleUpdateAuth = (deviceId) => {
+  handleBind = () => {
     Dialog.confirm({
       title: '设置归属',
       content: (
-        <Input
-          placeholder="请输出归属用户: "
-          onChange={val => this.setState({ auth: val })}
-        />),
+        <div>
+          <div style={{ marginTop: 20 }}>
+            <span>设备ID: </span>
+            <Input
+              placeholder="请输入设备ID: "
+              onChange={val => this.setState({ bindingDeviceId: val })}
+            />
+          </div>
+          <div style={{ marginTop: 20 }}>
+            <span>归属用户: </span>
+            <Input
+              placeholder="请输出归属用户: "
+              onChange={val => this.setState({ auth: val })}
+            />
+          </div>
+        </div>),
       onOk: async () => {
-        const { auth } = this.state;
-        const data = await iotApi.auth(deviceId, { owners: auth.split(/,[ ]*/) });
+        const { bindingDeviceId, auth } = this.state;
+        const data = await iotApi.auth(bindingDeviceId, { owners: auth.split(/,[ ]*/) });
         if (data) {
-          Message.success('Auth info set!');
+          Message.success('绑定成功!');
+        }
+      },
+    });
+  };
+
+  handleUnbind = (deviceId) => {
+    Dialog.confirm({
+      title: '解除绑定',
+      content: `确认解除绑定设备${deviceId}`,
+      onOk: async () => {
+        const data = await iotApi.auth(deviceId, { owners: [] });
+        if (data) {
+          Message.success('解绑成功!');
         }
       },
     });
@@ -176,9 +202,9 @@ export default class TrashTable extends Component {
           </MenuButton.Item>
           <MenuButton.Item
             style={{ marginLeft: '5px' }}
-            onClick={() => this.handleUpdateAuth(deviceId)}
+            onClick={() => this.handleUnbind(deviceId)}
           >
-            授权
+            解绑
           </MenuButton.Item>
           <MenuButton.Item
             style={{ marginLeft: '5px' }}
@@ -198,16 +224,21 @@ export default class TrashTable extends Component {
       <IceContainer>
         {/* search bar */}
         <div style={{ marginBottom: 20 }}>
-          <span>设备ID: </span>
-          <Input
-            name="deviceId"
-            value={this.state.deviceId}
-            onChange={v => this.setState({ deviceId: v, pageNo: 1 })}
-          />
-          <span>&nbsp;&nbsp;</span>
-          <Button onClick={() => this.fetchData().catch(console.error)}>
-            <Icon type="refresh" />
+          <Button onClick={this.handleBind} type="primary">
+            绑定设备
           </Button>
+          <div style={{ float: 'right' }} >
+            <Input
+              name="deviceId"
+              placeholder="请输出设备ID: "
+              value={this.state.deviceId}
+              onChange={v => this.setState({ deviceId: v, pageNo: 1 })}
+            />
+            <span>&nbsp;&nbsp;</span>
+            <Button onClick={() => this.fetchData().catch(console.error)}>
+              <Icon type="refresh" />
+            </Button>
+          </div>
         </div>
         <Table loading={isLoading} dataSource={data} hasBorder={false}>
           <Table.Column
