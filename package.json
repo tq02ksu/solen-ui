@@ -1,83 +1,57 @@
 {
-  "name": "@icedesign/pro-scaffold",
-  "version": "2.0.18",
-  "description": "该模板提供了 Redux、Mock、国际化、权限管理、注册登录等完整的方案，且内置了丰富的区块，主要用于展示现有区块的分类以及区块组合的效果，使用时需要根据需求进行删除和添加",
+  "name": "@alifd/fusion-design-pro-js",
+  "version": "0.1.0",
+  "description": "使用 JavaScript，包含大量 UI 区块，比如图表、表单等。",
   "dependencies": {
-    "@alifd/next": "^1.x",
-    "@antv/data-set": "^0.9.5",
-    "@icedesign/container": "^1.x",
-    "@icedesign/data-binder": "^1.x",
-    "@icedesign/ellipsis": "^1.x",
-    "@icedesign/form-binder": "^1.0.3",
-    "@icedesign/foundation-symbol": "^1.0.0",
-    "@icedesign/img": "^1.0.0",
-    "@icedesign/label": "^1.x",
-    "@icedesign/layout": "^1.x",
-    "@icedesign/theme": "^1.x",
+    "@alifd/next": "^1.21.0-beta.4",
+    "@alifd/theme-design-pro": "^0.6.2",
+    "@antv/data-set": "^0.10.2",
+    "@types/react": "^16.9.13",
+    "@types/react-dom": "^16.9.4",
     "@uiw/react-baidu-map": "^1.17.1",
-    "axios": "^0.19.0",
-    "bizcharts": "^3.2.2",
-    "bizgoblin": "0.0.1",
-    "classnames": "^2.2.5",
+    "ahooks": "^2.0.0",
+    "bizcharts": "^3.5.6",
     "crypto-js": "^4.0.0",
-    "enquire-js": "^0.1.2",
-    "history": "^4.7.2",
-    "hoist-non-react-statics": "^2.5.5",
-    "intl": "^1.2.5",
-    "invariant": "^2.2.4",
-    "lodash": "^4.17.19",
-    "moment": "^2.23.0",
-    "path-to-regexp": "^2.2.1",
+    "lodash.debounce": "^4.0.8",
+    "moment": "^2.24.0",
     "prop-types": "^15.5.8",
-    "react": "^16.2.0",
-    "react-document-title": "^2.0.3",
+    "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-intl": "^2.8.0",
-    "react-redux": "^5.0.7",
-    "react-router-dom": "^4.2.2",
-    "react-router-redux": "5.0.0-alpha.7",
-    "redux": "3.6.0",
-    "redux-thunk": "^2.3.0"
+    "react-sortablejs": "^5.0.0",
+    "sortablejs": "^1.12.0"
   },
   "devDependencies": {
-    "babel-eslint": "^8.0.3",
-    "babel-plugin-syntax-dynamic-import": "^6.18.0",
-    "eslint": "^4.13.1",
-    "eslint-config-airbnb": "^16.1.0",
-    "eslint-plugin-babel": "^4.1.1",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.5.1",
-    "ice-scripts": "^2.0.0",
-    "ice-plugin-fusion": "^0.1.4",
-    "ice-plugin-moment-locales": "^0.1.0"
+    "@iceworks/spec": "^1.0.0",
+    "build-plugin-fusion": "^0.1.0",
+    "build-plugin-moment-locales": "^0.1.0",
+    "eslint": "^6.8.0",
+    "ice.js": "^1.0.0",
+    "stylelint": "^13.2.0"
   },
   "scripts": {
-    "start": "ice-scripts dev",
-    "build": "ice-scripts build",
-    "lint": "eslint . --ext '.js,.jsx' --fix"
+    "start": "icejs start",
+    "build": "icejs build",
+    "lint": "npm run eslint && npm run stylelint",
+    "eslint": "eslint --cache --ext .js,.jsx,.ts,.tsx ./",
+    "eslint:fix": "npm run eslint -- --fix",
+    "stylelint": "stylelint '**/*.{css,scss,less}'",
+    "design": "icejs build --design"
   },
-  "scaffoldConfig": {
-    "builder": "ice-scripts",
-    "name": "ice-design-pro",
-    "title": "ICE Design Pro",
-    "categories": [
-      "基础模板"
-    ],
-    "screenshot": "https://img.alicdn.com/tfs/TB1bqV5JwTqK1RjSZPhXXXfOFXa-2860-1580.png",
-    "screenshots": [
-      "https://img.alicdn.com/tfs/TB1bqV5JwTqK1RjSZPhXXXfOFXa-2860-1580.png",
-      "https://img.alicdn.com/tfs/TB1n_CXJwHqK1RjSZFgXXa7JXXa-2862-1580.png",
-      "https://img.alicdn.com/tfs/TB1Qll_JrvpK1RjSZFqXXcXUVXa-2860-1580.png"
-    ],
-    "defaultLayout": "BasicLayout"
+  "ideMode": {
+    "name": "ice-react"
+  },
+  "iceworks": {
+    "type": "react",
+    "adapter": "adapter-react-v3"
   },
   "engines": {
     "node": ">=8.0.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ice-lab/react-materials/tree/master/scaffolds/ice-design-pro"
+    "url": "https://github.com/alibaba-fusion/materials/tree/master/scaffolds/fusion-design-pro-js"
   },
-  "title": "solen-ui"
+  "private": true,
+  "originTemplate": "@alifd/fusion-design-pro-js"
 }

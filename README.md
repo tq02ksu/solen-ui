@@ -1,103 +1,61 @@
-<p align="center">
-  <a href="https://alibaba.github.io/ice">
-    <img alt="ICE" src="https://gw.alicdn.com/tfs/TB1FEW2nfDH8KJjy1XcXXcpdXXa-487-132.svg" width="200">
-  </a>
-</p>
-<p align="center">赋能企业中后台建设</p>
-<p align="center">
-  <a href="https://github.com/alibaba/ice/blob/master/LICENSE"><img src="https://img.shields.io/badge/lisense-MIT-brightgreen.svg"></a>
-</p>
 
-## 简介
+## Fusion Design Pro - JS
 
-基于海量高质量可复用区块，通过 GUI 工具快速搭建的一套中后台模板。
-
-![ice-design-pro](https://img.alicdn.com/tfs/TB1_bulmpOWBuNjy0FiXXXFxVXa-1920-1080.png)
-
-## 特性
-
-- 专业的设计支持: [ICE Design](https://alibaba.github.io/ice/design.html)
-- 成熟的基础组件: [ICE Component](https://alibaba.github.io/ice/component/button)
-- 丰富的业务模块: [ICE Block](https://alibaba.github.io/ice/block)
-- 完善的开发工具: [iceworks](https://alibaba.github.io/ice/iceworks)
-
-## 技术点
-
-- icedesign
-- react
-- redux
-- redux-thunk
-- react-router-dom v4
-- axios
-- webpack v4
-- mockjs
-- etc...
-
-## 页面
-
-> 按照 Dashboard 综合页和 Block 分类进行展示
-
-```
-- Dashboard
-- 图表页
-  - 图表列表
-- 表格页
-  - 基础表格
-  - 展示型表格
-  - 表格列表
-- 列表页
-  - 文章列表
-  - 项目列表
-- 内容页
-  - 基础详情页
-  - 条款协议页
-  - 进度展示页
-- 结果页
-  - 成功
-  - 失败
-- 异常
-  - 403 无权限
-  - 404 找不到
-  - 500 服务器出错
-  - 内容为空
-```
-
-## 目录结构
-
-```
-ice-design-pro
-├── dist        // 打包资源
-├── mock        // 模拟数据
-├── public      // 静态资源
-├── src
-│   ├── components   // 公共组件
-│   ├── layouts      // 通用布局
-│   ├── locales      // i18n
-│   ├── pages        // 页面
-│   ├── index.js     // 应用入口
-│   ├── menuConfig   // 导航配置
-│   ├── routerConfig // 路由配置
-│   └── router.jsx   // 路由配置
-├── tests            // 测试
-├── .gitignore       // git 忽略目录配置
-├── .editorconfig    // 代码风格配置
-├── .eslintignore    // eslint 忽略目录配置
-├── .eslintrc        // eslint 配置
-├── package.json     // package.json
-└── README.md        // 项目说明
-```
+> 使用 JavaScript，包含大量 UI 区块，比如图表、表单等。
 
 ## 使用
 
-1.  (推荐) GUI 工具使用: 下载 [iceworks](https://alibaba.github.io/ice/#/iceworks)
-
-2.  Cli 命令使用:
-
 ```bash
-$ npm start      // 启动预览服务器
-$ npm run build  // 构建 dist
+# 安装依赖
+$ npm install
+
+# 启动服务
+$ npm start  # visit http://localhost:3333
 ```
 
-## 相关文档
+[More docs](https://ice.work/docs/guide/about).
 
-- [ICE Design Pro 使用文档](https://github.com/alibaba/ice/wiki#ice-design-pro-%E4%BD%BF%E7%94%A8%E6%96%87%E6%A1%A3)
+## 目录
+
+```md
+├── build/                         # 构建产物
+├── mock/                          # 本地模拟数据
+│   ├── index.[j,t]s
+├── public/
+│   ├── index.html                 # 应用入口 HTML
+│   └── favicon.png                # Favicon
+├── src/                           # 源码路径
+│   ├── components/                # 自定义业务组件
+│   │   └── Guide/
+│   │       ├── index.[j,t]sx
+│   │       ├── index.module.scss
+│   ├── layouts/                   # 布局组件
+│   │   └── BasicLayout/
+│   │       ├── index.[j,t]sx
+│   │       └── index.module.scss
+│   ├── pages/                     # 页面
+│   │   └── Home/                  # home 页面，约定路由转成小写
+│   │       ├── components/        # 页面级自定义业务组件
+│   │       ├── models.[j,t]sx     # 页面级数据状态
+│   │       ├── index.[j,t]sx      # 页面入口
+│   │       └── index.module.scss  # 页面样式文件
+│   ├── configs/                   # [可选] 配置文件
+│   │   └── menu.[j,t]s            # [可选] 菜单配置
+│   ├── models/                    # [可选] 应用级数据状态
+│   │   └── user.[j,t]s
+│   ├── utils/                     # [可选] 工具库
+│   ├── global.scss                # 全局样式
+│   ├── routes.[j,t]s              # 路由配置
+│   └── app.[j,t]s[x]              # 应用入口脚本
+├── build.json                     # 工程配置
+├── README.md
+├── package.json
+├── .editorconfig
+├── .eslintignore
+├── .eslintrc.[j,t]s
+├── .gitignore
+├── .stylelintignore
+├── .stylelintrc.[j,t]s
+├── .gitignore
+└── [j,t]sconfig.json
+```

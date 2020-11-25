@@ -1,82 +1,93 @@
-import React, { Component } from 'react';
-import Layout from '@icedesign/layout';
-import { withRouter } from 'react-router';
-import { enquire } from 'enquire-js';
-
-import Header from './components/Header';
-import Aside from './components/Aside';
+import React, { useState } from 'react';
+import { Shell, ConfigProvider } from '@alifd/next';
+import PageNav from './components/PageNav';
+import GlobalSearch from './components/GlobalSearch';
+import Notice from './components/Notice';
+import SolutionLink from './components/SolutionLink';
+import HeaderAvatar from './components/HeaderAvatar';
+import Logo from './components/Logo';
 import Footer from './components/Footer';
-import BasicLayoutHoc from './BasicLayoutHoc';
-import MainRoutes from './MainRoutes';
-import './index.scss';
 
-@withRouter
-@BasicLayoutHoc
-export default class BasicLayout extends Component {
-  static propTypes = {};
+(function () {
+  const throttle = function (type, name, obj = window) {
+    let running = false;
 
-  static defaultProps = {};
+    const func = () => {
+      if (running) {
+        return;
+      }
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isScreen: 'isDesktop',
+      running = true;
+      requestAnimationFrame(() => {
+        obj.dispatchEvent(new CustomEvent(name));
+        running = false;
+      });
     };
-  }
 
-  componentDidMount() {
-    this.enquireScreenRegister();
-  }
-
-  /**
-   * 注册监听屏幕的变化，可根据不同分辨率做对应的处理
-   */
-  enquireScreenRegister = () => {
-    const isMobile = 'screen and (max-width: 720px)';
-    const isTablet = 'screen and (min-width: 721px) and (max-width: 1199px)';
-    const isDesktop = 'screen and (min-width: 1200px)';
-
-    enquire.register(isMobile, this.enquireScreenHandle('isMobile'));
-    enquire.register(isTablet, this.enquireScreenHandle('isTablet'));
-    enquire.register(isDesktop, this.enquireScreenHandle('isDesktop'));
+    obj.addEventListener(type, func);
   };
 
-  enquireScreenHandle = (type) => {
-    return {
-      match: () => {
-        this.setState({
-          isScreen: type,
-        });
-      },
-    };
+  if (typeof window !== 'undefined') {
+    throttle('resize', 'optimizedResize');
+  }
+})();
+
+export default function BasicLayout({ children }) {
+  const getDevice = (width) => {
+    const isPhone = typeof navigator !== 'undefined' && navigator && navigator.userAgent.match(/phone/gi);
+
+    if (width < 680 || isPhone) {
+      return 'phone';
+    } else if (width < 1280 && width > 680) {
+      return 'tablet';
+    } else {
+      return 'desktop';
+    }
   };
 
-  render() {
-    const { profile = {}, userLogout } = this.props;
-    const isMobile = this.state.isScreen !== 'isDesktop';
-    const layoutClassName = 'ice-design-layout-dark ice-design-layout';
+  const [device, setDevice] = useState(getDevice(NaN));
 
-    return (
-      <div className={layoutClassName}>
-        <Layout>
-          <Header
-            isMobile={isMobile}
-            profile={profile}
-            handleLogout={userLogout}
-          />
-          <Layout.Section>
-            <Layout.Aside width="auto" type={null}>
-              <Aside isMobile={isMobile} />
-            </Layout.Aside>
-            <Layout.Main>
-              <MainRoutes />
-            </Layout.Main>
-          </Layout.Section>
+  if (typeof window !== 'undefined') {
+    window.addEventListener('optimizedResize', (e) => {
+      const deviceWidth = (e && e.target && e.target.innerWidth) || NaN;
+      setDevice(getDevice(deviceWidth));
+    });
+  }
 
+  return (
+    <ConfigProvider device={device}>
+      <Shell
+        style={{
+          minHeight: '100vh',
+        }}
+        type="brand"
+        fixedHeader={false}
+      >
+        <Shell.Branding>
+          <Logo image="https://img.alicdn.com/tfs/TB1.ZBecq67gK0jSZFHXXa9jVXa-904-826.png" text="Logo" />
+        </Shell.Branding>
+        <Shell.Navigation
+          direction="hoz"
+          style={{
+            marginRight: 10,
+          }}
+        >
+          <GlobalSearch />
+        </Shell.Navigation>
+        <Shell.Action>
+          <Notice />
+          <SolutionLink />
+          <HeaderAvatar />
+        </Shell.Action>
+        <Shell.Navigation>
+          <PageNav />
+        </Shell.Navigation>
+
+        <Shell.Content>{children}</Shell.Content>
+        <Shell.Footer>
           <Footer />
-        </Layout>
-      </div>
-    );
-  }
+        </Shell.Footer>
+      </Shell>
+    </ConfigProvider>
+  );
 }

@@ -1,15 +1,14 @@
-import React, { PureComponent } from 'react';
-import { Link } from 'react-router-dom';
-import './index.scss';
+import React from 'react';
+import { Link } from 'ice';
+import styles from './index.module.scss';
 
-export default class Logo extends PureComponent {
-  render() {
-    return (
-      <div className="logo">
-        <Link to="/" className="logo-text">
-          LOGO
-        </Link>
-      </div>
-    );
-  }
+export default function Logo({ image, text, url }) {
+  return (
+    <div className="logo">
+      <Link to={url || '/'} className={styles.logo}>
+        {image && <img src={image} alt="logo" />}
+        <span>{text}</span>
+      </Link>
+    </div>
+  );
 }
