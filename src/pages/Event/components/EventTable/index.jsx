@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Pagination, Table, DatePicker, Button, Icon, Input, Select, Balloon } from '@alifd/next';
-import IceContainer from '@icedesign/container';
 import { iot as iotApi } from '../../../../api';
-import styles from '../../../Trash/components/TrashTable/index.module.scss';
+import styles from '../../../Device/components/TrashTable/index.module.scss';
 
 export default class EventTable extends Component {
   static propTypes = {
@@ -46,7 +45,7 @@ export default class EventTable extends Component {
     this.setState(
       {
         pageNo: current,
-      }
+      },
     );
   };
 
@@ -63,35 +62,35 @@ export default class EventTable extends Component {
 
   render() {
     return (
-      <IceContainer>
+      <div>
         {/* search bar */}
         <div style={{ marginBottom: 20 }}>
           <span>开始时间: </span>
           <DatePicker
-            disabledDate={date => (moment().isBefore(date))}
+            disabledDate={(date) => (moment().isBefore(date))}
             showTime={{
               defaultValue: moment(),
               secondStep: 10,
             }}
             resetTime
-            onChange={v => this.setState({ startTime: v, pageNo: 1 })}
+            onChange={(v) => this.setState({ startTime: v, pageNo: 1 })}
           />
           <span>&nbsp;&nbsp;</span>
           <span>结束时间: </span>
           <DatePicker
-            disabledDate={date => (moment().isBefore(date))}
+            disabledDate={(date) => (moment().isBefore(date))}
             showTime={{
               secondStep: 10,
             }}
             resetTime
-            onChange={v => this.setState({ endTime: v, pageNo: 1 })}
+            onChange={(v) => this.setState({ endTime: v, pageNo: 1 })}
           />
           <span>&nbsp;&nbsp;</span>
           <span>设备ID: </span>
           <Input
             name="deviceId"
             value={this.state.deviceId}
-            onChange={v => this.setState({ deviceId: v, pageNo: 1 })}
+            onChange={(v) => this.setState({ deviceId: v, pageNo: 1 })}
           />
           <span>&nbsp;&nbsp;</span>
           <Button onClick={() => this.fetchData().catch(console.error)} key="refresh">
@@ -137,9 +136,8 @@ export default class EventTable extends Component {
                     <ul>
                       {
                         Object.keys(val)
-                          .map(key =>
-                            (<li key><b>{key}: </b> {val[key]}</li>)
-                          )
+                          .map((key) =>
+                            (<li key><b>{key}: </b> {val[key]}</li>))
                       }
                     </ul>
                   </Balloon>
@@ -155,7 +153,7 @@ export default class EventTable extends Component {
           total={this.state.total}
           onChange={this.handlePaginationChange}
         />
-      </IceContainer>
+      </div>
     );
   }
 }

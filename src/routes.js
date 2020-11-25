@@ -37,6 +37,7 @@ import Settings from '@/pages/Settings';
 import Person from '@/pages/Person';
 import Device from '@/pages/Device';
 import DeviceDetailPage from '@/pages/Device/components/DeviceDetailPage';
+import Event from '@/pages/Event'
 
 const routerConfig = [
   {
@@ -200,6 +201,10 @@ const routerConfig = [
       {
         path: '/device/:deviceId',
         component: DeviceDetailPage,
+      },
+      {
+        path: '/event/list',
+        component: Event,
       },
       {
         path: '/',
