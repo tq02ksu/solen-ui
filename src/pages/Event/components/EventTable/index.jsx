@@ -183,7 +183,7 @@ export default class EventTable extends Component {
                       {
                         Object.keys(val)
                           .map((key) =>
-                            (<li key><b>{key}: </b> {val[key]}</li>))
+                            (<li key={key}><b>{key}: </b> {val[key]}</li>))
                       }
                     </ul>
                   </Balloon>

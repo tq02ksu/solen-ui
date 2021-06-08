@@ -1,4 +1,5 @@
 {
+  "customWebpack": true,
   "plugins": [
     [
       "build-plugin-fusion",
@@ -13,7 +14,12 @@
           "zh-cn"
         ]
       }
+    ],
+    [
+      "build-plugin-webpack5",
+      {
+        "remoteRuntime": true
+      }
     ]
-  ],
-  "hash": true
+  ]
 }
