@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Pagination, Table, DatePicker, Button, Icon, Input, Select, Balloon } from '@alifd/next';
+import { Pagination, Table, DatePicker, Button, Icon, Input, Balloon, Dialog } from '@alifd/next';
 import { iot as iotApi } from '../../../../api';
 import styles from '../../../Device/components/TrashTable/index.module.scss';
+import { utils, writeFile } from 'xlsx';
 
 export default class EventTable extends Component {
   static propTypes = {
@@ -47,6 +48,47 @@ export default class EventTable extends Component {
         pageNo: current,
       },
     );
+  };
+
+  handleDownload = () => {
+    const handleOk = async () => {
+      const { startTime, endTime, deviceId, pageNo, pageSize } = this.state;
+
+      const data = [];
+      const map = {};
+      for (let et = endTime || moment(); et.isSameOrAfter(startTime);) {
+        const response = await iotApi.events({
+          startTime: startTime === undefined ? undefined : startTime.format('YYYY-MM-DD HH:mm:ss'),
+          endTime: et.format('YYYY-MM-DD HH:mm:ss'),
+          pageSize: 500,
+          deviceId,
+        });
+        if ((response.data || []).length === 0) {
+          break;
+        }
+        response.data.forEach((item) => {
+          if (!(item.eventId in map)) {
+            data.push({
+              eventId: item.eventId,
+              time: item.time,
+              type: item.type,
+              details: item.details && item.details.content,
+            });
+            map[item.eventId] = 1;
+            et = moment(item.time, ['YYYY-MM-DD HH:mm:ss', 'YYYY-MM-DD HH:mm:ss,SSS']);
+          }
+        });
+      }
+      const workbook = utils.book_new();
+      const sheet = utils.json_to_sheet(data);
+      utils.book_append_sheet(workbook, sheet, 'events');
+      writeFile(workbook, 'events.xlsx');
+    };
+    Dialog.confirm({
+      title: 'Confirm',
+      content: '确认导出成excel?',
+      onOk: handleOk,
+    });
   };
 
   componentDidMount() {
@@ -93,8 +135,12 @@ export default class EventTable extends Component {
             onChange={(v) => this.setState({ deviceId: v, pageNo: 1 })}
           />
           <span>&nbsp;&nbsp;</span>
-          <Button onClick={() => this.fetchData().catch(console.error)} key="refresh">
+          <Button onClick={() => this.fetchData().catch(console.error)} key="refresh" type="primary">
             <Icon type="refresh" />
+          </Button>
+          <span>&nbsp;&nbsp;</span>
+          <Button onClick={this.handleDownload} key="download">
+            <Icon type="download" />
           </Button>
         </div>
         <Table
