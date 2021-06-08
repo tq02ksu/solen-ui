@@ -1,5 +1,6 @@
 FROM node as compile
 
+ENV SASS_BINARY_SITE=https://npm.taobao.org/mirrors/node-sass/
 LABEL maintainer="tq02ksu@gmail.com"
 WORKDIR /app
 COPY . ./
