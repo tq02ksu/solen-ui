@@ -21,5 +21,6 @@
         "remoteRuntime": true
       }
     ]
-  ]
+  ],
+  "hash": true
 }
