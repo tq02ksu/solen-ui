@@ -1,4 +1,4 @@
-FROM node:alpine as compile
+FROM node:14-alpine as compile
 
 ENV SASS_BINARY_SITE=https://npm.taobao.org/mirrors/node-sass/
 ENV  NODE_OPTIONS=" --max_old_space_size=3072"
