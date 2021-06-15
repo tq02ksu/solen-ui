@@ -1,7 +1,7 @@
 FROM node:alpine as compile
 
 ENV SASS_BINARY_SITE=https://npm.taobao.org/mirrors/node-sass/
-ENV  NODE_OPTIONS=" --max_old_space_size=1600"
+ENV  NODE_OPTIONS=" --max_old_space_size=3072"
 LABEL maintainer="tq02ksu@gmail.com"
 WORKDIR /app
 COPY . ./
